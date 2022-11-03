@@ -6,9 +6,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import io.github.kale_ko.spigot_morphs.Data;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
@@ -89,7 +89,7 @@ public class MorphListener extends Listener {
     }
 
     @EventHandler
-    public void onPlayerDie(PlayerDeathEvent event) {
-        onMorphChange(event.getEntity());
+    public void onPlayerDie(PlayerRespawnEvent event) {
+        onMorphChange(event.getPlayer());
     }
 }
