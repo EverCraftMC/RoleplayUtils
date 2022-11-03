@@ -27,7 +27,7 @@ public class MorphListener extends Listener {
 
             Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph);
 
-            entity.setCustomName(player.getDisplayName());
+            entity.setCustomName(player.getName());
             entity.setCustomNameVisible(true);
             entity.setPersistent(true);
 
