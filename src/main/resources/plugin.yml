@@ -1,0 +1,10 @@
+main: io.github.kale_ko.spigot_morphs.Main
+
+name: SpigotMorphs
+version: ${plugin_version}
+description: A custom plugin that allows you to morph into different mods
+author: Kale Ko
+website: https://github.com/Kale-Ko/Spigot-Morphs
+
+api-version: "1.19"
+load: POSTWORLD
