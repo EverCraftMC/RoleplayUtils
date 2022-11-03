@@ -44,6 +44,7 @@ public class MorphListener extends Listener {
                 player.setAbsorptionAmount(livingEntity.getAbsorptionAmount());
             }
 
+            player.setInvisible(true);
             player.setCollidable(false);
 
             MetadataUtil.setMetadata(player, "morphed", true);
@@ -56,6 +57,7 @@ public class MorphListener extends Listener {
 
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 
+                player.setInvisible(false);
                 player.setCollidable(true);
 
                 MetadataUtil.removeMetadata(player, "morph");
