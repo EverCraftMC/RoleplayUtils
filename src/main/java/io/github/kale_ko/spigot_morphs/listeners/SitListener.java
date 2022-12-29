@@ -41,6 +41,11 @@ public class SitListener extends Listener {
 
             MetadataUtil.setMetadata(player, "sitting", true);
             MetadataUtil.setMetadata(player, "seat", entity.getUniqueId().toString());
+
+            entity.setInvisible(true);
+            entity.setSaddle(true);
+
+            entity.addPassenger(player);
         } else {
             if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
                 if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
