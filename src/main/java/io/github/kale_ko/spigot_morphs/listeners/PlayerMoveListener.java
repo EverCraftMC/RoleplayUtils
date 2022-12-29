@@ -32,6 +32,12 @@ public class PlayerMoveListener extends Listener {
                 Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())).teleport(player.getLocation(), TeleportCause.PLUGIN);
             }
         }
+
+        if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
+            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
+                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).setRotation(player.getLocation().getYaw(), 0);
+            }
+        }
     }
 
     @EventHandler
