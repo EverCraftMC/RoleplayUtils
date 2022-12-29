@@ -26,7 +26,7 @@ public class SitListener extends Listener {
                 MetadataUtil.removeMetadata(player, "sitting");
             }
 
-            Pig entity = (Pig) player.getWorld().spawnEntity(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation(), EntityType.PIG);
+            Pig entity = (Pig) player.getWorld().spawnEntity(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation().add(0, -0.5, 0), EntityType.PIG);
 
             entity.setPersistent(true);
 
@@ -43,7 +43,6 @@ public class SitListener extends Listener {
             MetadataUtil.setMetadata(player, "seat", entity.getUniqueId().toString());
 
             entity.setInvisible(true);
-            entity.setSaddle(true);
 
             entity.addPassenger(player);
         } else {

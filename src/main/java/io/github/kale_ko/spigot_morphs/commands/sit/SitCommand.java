@@ -29,7 +29,7 @@ public class SitCommand extends Command {
                         SitListener.onSitStand(player);
                     } else {
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
-                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation());
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0, 0.5));
                         Main.getInstance().getPluginData().save();
 
                         SitListener.onSitStand(player);
@@ -44,7 +44,7 @@ public class SitCommand extends Command {
             } else {
                 if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation());
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0, 0.5));
                     Main.getInstance().getPluginData().save();
 
                     SitListener.onSitStand(player);
