@@ -4,41 +4,63 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
+import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.commands.Command;
+import io.github.kale_ko.spigot_morphs.listeners.SitListener;
 import io.github.kale_ko.spigot_morphs.util.StringUtils;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
+import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
 
 public class SitCommand extends Command {
     public SitCommand(String name, String description, List<String> aliases, String permission) {
         super(name, description, aliases, permission);
     }
 
-    @Override
     public void run(CommandSender sender, String[] args) {
         if (sender instanceof Player player) {
-            Pig pig;
-            if (args.length > 0 && args[0].equalsIgnoreCase("precise")) {
-                pig = (Pig) player.getWorld().spawnEntity(player.getLocation().add(0, -1, 0), EntityType.PIG);
-            } else {
-                pig = (Pig) player.getWorld().spawnEntity(player.getLocation().getBlock().getLocation().add(0.5, player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation().add(0, -1, 0)).getType().getKey().getKey().endsWith("_stairs") || player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation().add(0, -1, 0)).getType().getKey().getKey().endsWith("_slab") || player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation().add(0, -1, 0)).getType().getKey().getKey().endsWith("_bed") ? -1.5 : (player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation()).getType().getKey().getKey().endsWith("_stairs") || player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation()).getType().getKey().getKey().endsWith("_slab") || player.getWorld().getBlockAt(player.getLocation().getBlock().getLocation()).getType().getKey().getKey().endsWith("_bed") ? -0.5 : -1), 0.5), EntityType.PIG);
-            }
+            if (args.length > 0) {
+                if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
+                    if (args[0].equalsIgnoreCase("precise")) {
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
+                        Main.getInstance().getPluginData().save();
 
-            pig.setInvisible(true);
-            pig.setInvulnerable(true);
-            pig.setAI(false);
-            pig.setGravity(false);
-            pig.setSilent(true);
-            pig.addScoreboardTag("playerSeat:" + player.getUniqueId().toString() + ":" + player.getLocation().getX() + "," + player.getLocation().getY() + "," + player.getLocation().getZ());
-            pig.addPassenger(player);
+                        SitListener.onSitStand(player);
+                    } else {
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation());
+                        Main.getInstance().getPluginData().save();
+
+                        SitListener.onSitStand(player);
+                    }
+                } else {
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    Main.getInstance().getPluginData().save();
+
+                    SitListener.onSitStand(player);
+                }
+            } else {
+                if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation());
+                    Main.getInstance().getPluginData().save();
+
+                    SitListener.onSitStand(player);
+                } else {
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    Main.getInstance().getPluginData().save();
+
+                    SitListener.onSitStand(player);
+                }
+            }
         } else {
             sender.sendMessage(TextFormatter.translateColors("&cYou can't do that from the console"));
         }
     }
 
-    @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         List<String> list = new ArrayList<String>();
 
