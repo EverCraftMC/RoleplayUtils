@@ -46,7 +46,7 @@ public class SitListener extends Listener {
             entity.setAI(false);
             entity.setGravity(false);
             entity.setCollidable(false);
-            entity.setInvulnerable(false);
+            entity.setInvulnerable(true);
             entity.setSilent(true);
             entity.setPersistent(true);
             entity.setRemoveWhenFarAway(false);
