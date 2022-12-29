@@ -63,10 +63,14 @@ public class SitListener extends Listener {
         } else {
             if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
                 if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
+                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).eject();
                     Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).remove();
                 }
 
-                player.teleport(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation());
+                Location returnLocation = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation();
+                returnLocation.setPitch(player.getLocation().getPitch());
+                returnLocation.setYaw(player.getLocation().getYaw());
+                player.teleport(returnLocation);
 
                 MetadataUtil.removeMetadata(player, "seat");
                 MetadataUtil.removeMetadata(player, "sitting");
@@ -88,6 +92,7 @@ public class SitListener extends Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
             if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
+                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).eject();
                 Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
             }
 
@@ -113,12 +118,16 @@ public class SitListener extends Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
-        Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-        Main.getInstance().getPluginData().save();
+        if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
+            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
+                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).eject();
+                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
+            }
 
-        onSitStand(event.getPlayer());
-    }
+            MetadataUtil.removeMetadata(event.getPlayer(), "seat");
+            MetadataUtil.removeMetadata(event.getPlayer(), "sitting");
+        }
+}
 
     @EventHandler
     public void onPlayerDie(PlayerRespawnEvent event) {
