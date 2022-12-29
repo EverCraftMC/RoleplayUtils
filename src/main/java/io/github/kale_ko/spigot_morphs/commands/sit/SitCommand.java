@@ -23,13 +23,13 @@ public class SitCommand extends Command {
                 if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     if (args[0].equalsIgnoreCase("precise")) {
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
-                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(player.getLocation().getX() % 1, 0.5, player.getLocation().getZ() % 1));
                         Main.getInstance().getPluginData().save();
 
                         SitListener.onSitStand(player);
                     } else {
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
-                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0, 0.5));
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
                         Main.getInstance().getPluginData().save();
 
                         SitListener.onSitStand(player);
@@ -44,7 +44,7 @@ public class SitCommand extends Command {
             } else {
                 if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0, 0.5));
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
                     Main.getInstance().getPluginData().save();
 
                     SitListener.onSitStand(player);

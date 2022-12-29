@@ -2,6 +2,10 @@ package io.github.kale_ko.spigot_morphs.listeners;
 
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.block.data.Bisected.Half;
+import org.bukkit.block.data.type.Bed;
+import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
@@ -33,15 +37,15 @@ public class SitListener extends Listener {
             Location location = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation();
             double offset = -1;
 
-            if (location.clone().add(0, -1, 0).getBlock().getType().toString().equals("_SLAB") || location.clone().add(0, -1, 0).getBlock().getType().toString().equals("_STAIRS") || location.clone().add(0, -1, 0).getBlock().getType().toString().equals("_BED")) {
+            if ((location.clone().add(0, -1, 0).getBlock().getBlockData() instanceof Slab slab && slab.getType() == Slab.Type.BOTTOM) || (location.clone().add(0, -1, 0).getBlock().getBlockData() instanceof Stairs stairs && stairs.getHalf() == Half.BOTTOM) || (location.clone().add(0, -1, 0).getBlock().getBlockData() instanceof Bed)) {
                 offset = -1.5;
             }
 
-            if (location.getBlock().getType().toString().equals("_SLAB") || location.getBlock().getType().toString().equals("_STAIRS") || location.getBlock().getType().toString().equals("_BED")) {
+            if ((location.clone().getBlock().getBlockData() instanceof Slab slab && slab.getType() == Slab.Type.BOTTOM) || (location.clone().getBlock().getBlockData() instanceof Stairs stairs && stairs.getHalf() == Half.BOTTOM) || (location.clone().getBlock().getBlockData() instanceof Bed)) {
                 offset = -0.5;
             }
 
-            Pig entity = (Pig) player.getWorld().spawnEntity(location.clone().add(0, offset, 0), EntityType.PIG);
+            Pig entity = (Pig) player.getWorld().spawnEntity(location.clone().add(0, offset - 0.5, 0), EntityType.PIG);
 
             entity.setAI(false);
             entity.setGravity(false);
@@ -127,7 +131,7 @@ public class SitListener extends Listener {
             MetadataUtil.removeMetadata(event.getPlayer(), "seat");
             MetadataUtil.removeMetadata(event.getPlayer(), "sitting");
         }
-}
+    }
 
     @EventHandler
     public void onPlayerDie(PlayerRespawnEvent event) {
