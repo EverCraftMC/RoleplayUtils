@@ -16,7 +16,7 @@ public abstract class Command extends org.bukkit.command.Command {
         this.setAliases(aliases);
         this.setPermission(permission);
         if (permission != null) {
-            this.setPermissionMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().error.noPerms.replace("{permission}", permission)));
+            this.setPermissionMessage(TextFormatter.translateColors("&cYou need the permission \"" + permission + "\" to do that"));
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class Command extends org.bukkit.command.Command {
         if (this.testPermissionSilent(sender)) {
             return true;
         } else {
-            sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().error.noPerms.replace("{permission}", this.getPermission())));
+            sender.sendMessage(TextFormatter.translateColors("&cYou need the permission \"" + this.getPermission() + "\" to do that"));
 
             return false;
         }

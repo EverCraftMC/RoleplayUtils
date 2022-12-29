@@ -27,7 +27,7 @@ public class MorphCommand extends Command {
 
                     MorphListener.onMorphChange(player);
 
-                    sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().unmorphed));
+                    sender.sendMessage(TextFormatter.translateColors("&aSuccessfully removed your morph"));
                 } else {
                     try {
                         EntityType entityType = EntityType.valueOf(args[0].replace("minecraft:", "").replace("-", "_").toUpperCase());
@@ -38,16 +38,16 @@ public class MorphCommand extends Command {
 
                         MorphListener.onMorphChange(player);
 
-                        sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().morphed.replace("{entity}", entityType.toString().toLowerCase().replace("_", " ")).replace("{n}", (entityType.toString().charAt(0) == 'A' || entityType.toString().charAt(0) == 'E' || entityType.toString().charAt(0) == 'I' || entityType.toString().charAt(0) == 'O' || entityType.toString().charAt(0) == 'U') ? "n" : "")));
+                        sender.sendMessage(TextFormatter.translateColors("&aSuccessfully morphed into a" + ((entityType.toString().charAt(0) == 'A' || entityType.toString().charAt(0) == 'E' || entityType.toString().charAt(0) == 'I' || entityType.toString().charAt(0) == 'O' || entityType.toString().charAt(0) == 'U') ? "n" : "") + " " + entityType.toString().toLowerCase().replace("_", " ")));
                     } catch (IllegalArgumentException e) {
-                        sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().error.invalidArgs));
+                        sender.sendMessage(TextFormatter.translateColors("&cInvalid arguments"));
                     }
                 }
             } else {
-                sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().error.invalidArgs));
+                sender.sendMessage(TextFormatter.translateColors("&cInvalid arguments"));
             }
         } else {
-            sender.sendMessage(TextFormatter.translateColors(Main.getInstance().getPluginMessages().getParsed().error.noConsole));
+            sender.sendMessage(TextFormatter.translateColors("&cYou can't do that from the console"));
         }
     }
 
