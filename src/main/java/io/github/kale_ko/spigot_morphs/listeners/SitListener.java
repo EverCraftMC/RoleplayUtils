@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import io.github.kale_ko.spigot_morphs.Data;
 import io.github.kale_ko.spigot_morphs.Main;
@@ -67,14 +68,13 @@ public class SitListener extends Listener {
         } else {
             if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
                 if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).eject();
                     Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).remove();
                 }
 
                 Location returnLocation = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation();
                 returnLocation.setPitch(player.getLocation().getPitch());
                 returnLocation.setYaw(player.getLocation().getYaw());
-                player.teleport(returnLocation);
+                player.teleport(returnLocation, TeleportCause.PLUGIN);
 
                 MetadataUtil.removeMetadata(player, "seat");
                 MetadataUtil.removeMetadata(player, "sitting");
@@ -96,7 +96,6 @@ public class SitListener extends Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
             if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).eject();
                 Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
             }
 
@@ -124,7 +123,6 @@ public class SitListener extends Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
             if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).eject();
                 Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
             }
 
