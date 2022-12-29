@@ -12,6 +12,7 @@ public class Data {
 
         public Boolean isSitting = false;
         public SerializableLocation sittingLocation = null;
+        public SerializableLocation sittingFromLocation = null;
     }
 
     public Map<String, Player> players = new HashMap<String, Player>();

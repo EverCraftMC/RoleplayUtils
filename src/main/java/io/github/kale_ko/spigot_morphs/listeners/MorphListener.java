@@ -31,9 +31,6 @@ public class MorphListener extends Listener {
             entity.setCustomNameVisible(true);
             entity.setPersistent(true);
 
-            MetadataUtil.setMetadata(entity, "morphed", true);
-            MetadataUtil.setMetadata(entity, "morph", player.getUniqueId().toString());
-
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.setAI(false);
                 livingEntity.setCollidable(false);
@@ -43,6 +40,9 @@ public class MorphListener extends Listener {
                 player.setHealth(livingEntity.getHealth());
                 player.setAbsorptionAmount(livingEntity.getAbsorptionAmount());
             }
+
+            MetadataUtil.setMetadata(entity, "morphed", true);
+            MetadataUtil.setMetadata(entity, "morph", player.getUniqueId().toString());
 
             player.setInvisible(true);
             player.setCollidable(false);
