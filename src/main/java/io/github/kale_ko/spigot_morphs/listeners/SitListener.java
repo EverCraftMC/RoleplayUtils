@@ -49,7 +49,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.player.PlayerModelPart;
 
 public class SitListener extends Listener {
     protected static class SkinCacheObject {
@@ -158,7 +157,7 @@ public class SitListener extends Listener {
                 ServerPlayer entityPlayer = new ServerPlayer(server, world, new GameProfile(UUID.randomUUID(), player.getName()));
 
                 entityPlayer.getGameProfile().getProperties().put("textures", new Property("textures", skinTexture, skinSignature));
-                entityPlayer.getEntityData().set(ServerPlayer.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (PlayerModelPart.HAT.getMask() & PlayerModelPart.JACKET.getMask() & PlayerModelPart.LEFT_SLEEVE.getMask() & PlayerModelPart.RIGHT_SLEEVE.getMask() & PlayerModelPart.LEFT_PANTS_LEG.getMask() & PlayerModelPart.RIGHT_PANTS_LEG.getMask()));
+                entityPlayer.getEntityData().set(ServerPlayer.DATA_PLAYER_MODE_CUSTOMISATION, ((CraftPlayer) player).getHandle().getEntityData().get(ServerPlayer.DATA_PLAYER_MODE_CUSTOMISATION));
 
                 entityPlayer.setPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ());
                 entityPlayer.setRot(layLocation.getYaw(), layLocation.getPitch());

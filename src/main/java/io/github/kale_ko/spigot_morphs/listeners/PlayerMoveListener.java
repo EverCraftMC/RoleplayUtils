@@ -2,6 +2,7 @@ package io.github.kale_ko.spigot_morphs.listeners;
 
 import java.util.UUID;
 import org.bukkit.GameMode;
+import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -34,8 +35,14 @@ public class PlayerMoveListener extends Listener {
         }
 
         if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).setRotation(player.getLocation().getYaw(), 0);
+            if (player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
+                player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).setRotation(player.getLocation().getYaw(), 0);
+            }
+        }
+
+        if (MetadataUtil.hasMetadata(player, "laying") && MetadataUtil.getMetadata(player, "laying").asBoolean()) {
+            if (player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "lay").asString())) != null) {
+                ((CraftWorld) player.getWorld()).getHandle().getEntity(MetadataUtil.getMetadata(player, "lay").asInt()).setYHeadRot(player.getLocation().getYaw());
             }
         }
     }
