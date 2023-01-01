@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import io.github.kale_ko.spigot_morphs.Data;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 
 public class MorphListener extends Listener {
     public static void onMorphChange(Player player) {
@@ -27,7 +28,7 @@ public class MorphListener extends Listener {
 
             Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph);
 
-            entity.setCustomName(player.getName());
+            entity.customName(ComponentFormatter.stringToComponent(player.getName()));
             entity.setCustomNameVisible(true);
             entity.setPersistent(true);
 

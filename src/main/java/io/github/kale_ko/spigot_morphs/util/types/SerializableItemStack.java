@@ -8,20 +8,20 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
+import net.kyori.adventure.text.Component;
 
 public class SerializableItemStack {
-    private Material type = Material.STONE;
-    private String name = "Stone";
-    private Integer amount = 1;
-    private Integer damage = 0;
+    private Material type;
+    private String name;
+    private Integer amount;
+    private Integer damage;
 
-    private List<String> lore = new ArrayList<String>();
-    private List<SerializableEnchantment> enchantments = new ArrayList<SerializableEnchantment>();
+    private List<String> lore;
+    private List<SerializableEnchantment> enchantments;
 
-    private Integer customModelData = 0;
-
-    public SerializableItemStack(Material type, String name, Integer amount, Integer damage, List<String> lore, List<SerializableEnchantment> enchantments, Integer customModelData) {
+    public SerializableItemStack(Material type, String name, Integer amount, Integer damage, List<String> lore, List<SerializableEnchantment> enchantments) {
         this.type = type;
         this.name = name;
         this.amount = amount;
@@ -29,8 +29,6 @@ public class SerializableItemStack {
 
         this.lore = lore;
         this.enchantments = enchantments;
-
-        this.customModelData = customModelData;
     }
 
     public Material getType() {
@@ -57,16 +55,12 @@ public class SerializableItemStack {
         return this.enchantments;
     }
 
-    public Integer getCustomModelData() {
-        return this.customModelData;
-    }
-
     public ItemStack toBukkitItemStack() {
         ItemStack stack = new ItemStack(this.getType(), this.getAmount());
         ItemMeta meta = stack.getItemMeta();
 
         if (this.getName() != null) {
-            meta.setDisplayName(TextFormatter.translateColors(this.getName()));
+            meta.displayName(ComponentFormatter.stringToComponent(TextFormatter.translateColors(this.getName())));
         }
 
         if (this.getDamage() != null && meta instanceof Damageable damageable) {
@@ -74,18 +68,18 @@ public class SerializableItemStack {
         }
 
         if (this.getLore().size() > 0) {
-            meta.setLore(this.getLore());
+            List<Component> loreComponents = new ArrayList<Component>();
+
+            for (String line : this.getLore()) {
+                loreComponents.add(ComponentFormatter.stringToComponent(line));
+            }
+
+            meta.lore(loreComponents);
         }
 
         for (SerializableEnchantment enchantment : this.getEnchantments()) {
             meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
         }
-
-        if (this.getCustomModelData() != null) {
-            meta.setCustomModelData(this.getCustomModelData());
-        }
-
-        stack.setItemMeta(meta);
 
         return stack;
     }
@@ -96,7 +90,9 @@ public class SerializableItemStack {
         List<String> lore = new ArrayList<String>();
 
         if (meta.hasLore()) {
-            lore = meta.getLore();
+            for (Component component : meta.lore()) {
+                lore.add(ComponentFormatter.componentToString(component));
+            }
         }
 
         List<SerializableEnchantment> enchantments = new ArrayList<SerializableEnchantment>();
@@ -107,6 +103,6 @@ public class SerializableItemStack {
             }
         }
 
-        return new SerializableItemStack(stack.getType(), meta.hasDisplayName() ? meta.getDisplayName() : null, stack.getAmount(), meta instanceof Damageable ? ((Damageable) meta).getDamage() : null, lore, enchantments, meta.getCustomModelData());
+        return new SerializableItemStack(stack.getType(), meta.hasDisplayName() ? ComponentFormatter.componentToString(meta.displayName()) : null, stack.getAmount(), meta instanceof Damageable damageable && damageable.hasDamage() ? damageable.getDamage() : null, lore, enchantments);
     }
 }

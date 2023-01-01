@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import io.github.kale_ko.spigot_morphs.Main;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
 
 public abstract class Command extends org.bukkit.command.Command {
@@ -16,7 +17,7 @@ public abstract class Command extends org.bukkit.command.Command {
         this.setAliases(aliases);
         this.setPermission(permission);
         if (permission != null) {
-            this.setPermissionMessage(TextFormatter.translateColors("&cYou need the permission \"" + permission + "\" to do that"));
+            this.permissionMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cYou need the permission \"" + permission + "\" to do that")));
         }
     }
 
@@ -34,7 +35,7 @@ public abstract class Command extends org.bukkit.command.Command {
         if (this.testPermissionSilent(sender)) {
             return true;
         } else {
-            sender.sendMessage(TextFormatter.translateColors("&cYou need the permission \"" + this.getPermission() + "\" to do that"));
+            sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cYou need the permission \"" + this.getPermission() + "\" to do that")));
 
             return false;
         }

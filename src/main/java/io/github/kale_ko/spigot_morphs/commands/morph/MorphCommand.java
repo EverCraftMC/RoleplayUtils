@@ -10,6 +10,7 @@ import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.commands.Command;
 import io.github.kale_ko.spigot_morphs.listeners.MorphListener;
 import io.github.kale_ko.spigot_morphs.util.StringUtils;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
 
 public class MorphCommand extends Command {
@@ -27,7 +28,7 @@ public class MorphCommand extends Command {
 
                     MorphListener.onMorphChange(player);
 
-                    sender.sendMessage(TextFormatter.translateColors("&aSuccessfully removed your morph"));
+                    sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&aSuccessfully removed your morph")));
                 } else {
                     try {
                         EntityType entityType = EntityType.valueOf(args[0].replace("minecraft:", "").replace("-", "_").toUpperCase());
@@ -38,16 +39,16 @@ public class MorphCommand extends Command {
 
                         MorphListener.onMorphChange(player);
 
-                        sender.sendMessage(TextFormatter.translateColors("&aSuccessfully morphed into a" + ((entityType.toString().charAt(0) == 'A' || entityType.toString().charAt(0) == 'E' || entityType.toString().charAt(0) == 'I' || entityType.toString().charAt(0) == 'O' || entityType.toString().charAt(0) == 'U') ? "n" : "") + " " + entityType.toString().toLowerCase().replace("_", " ")));
+                        sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&aSuccessfully morphed into a" + ((entityType.toString().charAt(0) == 'A' || entityType.toString().charAt(0) == 'E' || entityType.toString().charAt(0) == 'I' || entityType.toString().charAt(0) == 'O' || entityType.toString().charAt(0) == 'U') ? "n" : "") + " " + entityType.toString().toLowerCase().replace("_", " "))));
                     } catch (IllegalArgumentException e) {
-                        sender.sendMessage(TextFormatter.translateColors("&cInvalid arguments"));
+                        sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cInvalid arguments")));
                     }
                 }
             } else {
-                sender.sendMessage(TextFormatter.translateColors("&cInvalid arguments"));
+                sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cInvalid arguments")));
             }
         } else {
-            sender.sendMessage(TextFormatter.translateColors("&cYou can't do that from the console"));
+            sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cYou can't do that from the console")));
         }
     }
 

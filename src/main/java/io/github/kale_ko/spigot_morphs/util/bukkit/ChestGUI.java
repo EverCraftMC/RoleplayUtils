@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import io.github.kale_ko.spigot_morphs.listeners.Listener;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
 
 public class ChestGUI extends Listener {
@@ -29,7 +30,7 @@ public class ChestGUI extends Listener {
     protected Map<Integer, Consumer<Player>> slotCallbacks = new HashMap<Integer, Consumer<Player>>();
 
     public ChestGUI(String title, Integer rows, Boolean lockSlots, Boolean lockEmptySlots) {
-        this.inv = Bukkit.createInventory(null, rows * 9, TextFormatter.translateColors(title));
+        this.inv = Bukkit.createInventory(null, rows * 9, ComponentFormatter.stringToComponent(TextFormatter.translateColors(title)));
 
         this.register();
 

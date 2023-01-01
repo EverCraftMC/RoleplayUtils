@@ -33,7 +33,7 @@ public class ItemStackAction extends Listener {
 
     @EventHandler
     public void onItemUse(PlayerInteractEvent event) {
-        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null && event.getItem().getType() == stack.getType() && event.getItem().getItemMeta().getDisplayName().equals(stack.getItemMeta().getDisplayName())) {
+        if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && event.getItem() != null && event.getItem().getType() == stack.getType() && event.getItem().getItemMeta().displayName().equals(stack.getItemMeta().displayName())) {
             event.setCancelled(true);
 
             action.accept(event.getPlayer());

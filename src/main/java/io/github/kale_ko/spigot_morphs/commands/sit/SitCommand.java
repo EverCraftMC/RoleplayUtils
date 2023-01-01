@@ -5,10 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import io.github.kale_ko.spigot_morphs.Data;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.commands.Command;
 import io.github.kale_ko.spigot_morphs.listeners.SitListener;
 import io.github.kale_ko.spigot_morphs.util.StringUtils;
+import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
 import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
 import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
 
@@ -23,12 +25,14 @@ public class SitCommand extends Command {
                 if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     if (args[0].equalsIgnoreCase("precise")) {
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.SITTING;
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(player.getLocation().getX() % 1, 0.5, player.getLocation().getZ() % 1));
                         Main.getInstance().getPluginData().save();
 
                         SitListener.onSitStand(player);
                     } else {
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.SITTING;
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
                         Main.getInstance().getPluginData().save();
 
@@ -36,6 +40,7 @@ public class SitCommand extends Command {
                     }
                 } else {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = null;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
                     Main.getInstance().getPluginData().save();
 
@@ -44,12 +49,14 @@ public class SitCommand extends Command {
             } else {
                 if (!Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = true;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.SITTING;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
                     Main.getInstance().getPluginData().save();
 
                     SitListener.onSitStand(player);
                 } else {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = null;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
                     Main.getInstance().getPluginData().save();
 
@@ -57,7 +64,7 @@ public class SitCommand extends Command {
                 }
             }
         } else {
-            sender.sendMessage(TextFormatter.translateColors("&cYou can't do that from the console"));
+            sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cYou can't do that from the console")));
         }
     }
 

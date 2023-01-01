@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
 import io.github.kale_ko.spigot_morphs.commands.Command;
 import io.github.kale_ko.spigot_morphs.commands.morph.MorphCommand;
+import io.github.kale_ko.spigot_morphs.commands.sit.LayCommand;
 import io.github.kale_ko.spigot_morphs.commands.sit.SitCommand;
 import io.github.kale_ko.spigot_morphs.config.FileConfig;
 import io.github.kale_ko.spigot_morphs.listeners.Listener;
@@ -53,6 +54,7 @@ public class Main extends JavaPlugin {
         this.commands.add(new MorphCommand("morph", "Morph into another entity", Arrays.asList(), "spigot_morphs.commands.morph").register());
 
         this.commands.add(new SitCommand("sit", "Sit on the floor", Arrays.asList(), "spigot_morphs.commands.sit").register());
+        this.commands.add(new LayCommand("lay", "Lay on the floor", Arrays.asList("sleep"), "spigot_morphs.commands.lay").register());
 
         this.getLogger().info("Finished loading commands");
 
