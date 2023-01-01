@@ -157,8 +157,7 @@ public class SitListener extends Listener {
                 entityPlayer.getEntityData().set(ServerPlayer.DATA_PLAYER_MODE_CUSTOMISATION, ((CraftPlayer) player).getHandle().getEntityData().get(ServerPlayer.DATA_PLAYER_MODE_CUSTOMISATION));
 
                 entityPlayer.setPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ());
-                entityPlayer.setRot(layLocation.getYaw(), layLocation.getPitch());
-                entityPlayer.setYHeadRot(layLocation.getYaw());
+                entityPlayer.setRot(0, 0);
 
                 for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
                     ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
@@ -249,10 +248,12 @@ public class SitListener extends Listener {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = null;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
                     Main.getInstance().getPluginData().save();
 
                     onSitStand(player);
+
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
+                    Main.getInstance().getPluginData().save();
                 }
             }
         }
@@ -265,10 +266,12 @@ public class SitListener extends Listener {
                 Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
                 Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
                 Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
                 Main.getInstance().getPluginData().save();
 
                 onSitStand(event.getPlayer());
+
+                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+                Main.getInstance().getPluginData().save();
             }
         }
     }
@@ -279,10 +282,12 @@ public class SitListener extends Listener {
             Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
             Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
             Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
             Main.getInstance().getPluginData().save();
 
             onSitStand(event.getPlayer());
+
+            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+            Main.getInstance().getPluginData().save();
         }
     }
 }

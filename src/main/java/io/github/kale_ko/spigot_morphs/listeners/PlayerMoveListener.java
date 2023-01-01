@@ -2,6 +2,8 @@ package io.github.kale_ko.spigot_morphs.listeners;
 
 import java.util.UUID;
 import org.bukkit.GameMode;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +17,6 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -45,12 +46,25 @@ public class PlayerMoveListener extends Listener {
         if (SitListener.layEntities.containsKey(player.getUniqueId().toString())) {
             ServerPlayer entityPlayer = SitListener.layEntities.get(player.getUniqueId().toString());
 
-            entityPlayer.setRot(player.getLocation().getYaw(), player.getLocation().getPitch());
-            entityPlayer.setYHeadRot(player.getLocation().getYaw());
+            float yaw = player.getLocation().getYaw();
+
+            BlockFace bedDir = BlockFace.WEST;
+            if (player.getLocation().getBlock().getBlockData() instanceof Bed bed) {
+                bedDir = bed.getFacing();
+            }
+
+            if (bedDir == BlockFace.NORTH) {
+                yaw += 180;
+            } else if (bedDir == BlockFace.EAST) {
+                yaw += 90;
+            } else if (bedDir == BlockFace.WEST) {
+                yaw -= 90;
+            }
+
+            entityPlayer.setYHeadRot(Math.min(Math.max(yaw % 360, -70), 70));
 
             for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
                 ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
-                connection.send(new ClientboundMoveEntityPacket.Rot(entityPlayer.getId(), (byte) ((int) (entityPlayer.getXRot() * 256.0F / 360.0F)), (byte) ((int) (entityPlayer.getYRot() * 256.0F / 360.0F)), true));
                 connection.send(new ClientboundRotateHeadPacket(entityPlayer, (byte) ((int) (entityPlayer.getYHeadRot() * 256.0F / 360.0F))));
             }
         }
