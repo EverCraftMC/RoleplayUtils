@@ -61,10 +61,10 @@ public class SitListener extends Listener {
         }
     }
 
-    public static Map<String, Pig> seatEntities = new HashMap<String, Pig>();
-    public static Map<String, ServerPlayer> layEntities = new HashMap<String, ServerPlayer>();
+    public static final Map<String, Pig> seatEntities = new HashMap<String, Pig>();
+    public static final Map<String, ServerPlayer> layEntities = new HashMap<String, ServerPlayer>();
 
-    protected static Map<String, SkinCacheObject> skinsCache = new HashMap<String, SkinCacheObject>();
+    protected static final Map<String, SkinCacheObject> skinsCache = new HashMap<String, SkinCacheObject>();
 
     public static void onSitStand(Player player) {
         if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
