@@ -3,7 +3,6 @@ package io.github.kale_ko.spigot_morphs.listeners;
 import java.util.UUID;
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Bed;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,9 +16,11 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.level.block.BedBlock;
 
 public class PlayerMoveListener extends Listener {
     public PlayerMoveListener() {
@@ -49,8 +50,18 @@ public class PlayerMoveListener extends Listener {
             float yaw = player.getLocation().getYaw();
 
             BlockFace bedDir = BlockFace.WEST;
-            if (player.getLocation().getBlock().getBlockData() instanceof Bed bed) {
-                bedDir = bed.getFacing();
+            if (entityPlayer.getLevel().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getBlock() instanceof BedBlock bed) {
+                Direction direction = entityPlayer.getLevel().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getValue(BedBlock.FACING);
+
+                if (direction == Direction.NORTH) {
+                    bedDir = BlockFace.NORTH;
+                } else if (direction == Direction.SOUTH) {
+                    bedDir = BlockFace.SOUTH;
+                } else if (direction == Direction.EAST) {
+                    bedDir = BlockFace.EAST;
+                } else if (direction == Direction.WEST) {
+                    bedDir = BlockFace.WEST;
+                }
             }
 
             if (bedDir == BlockFace.NORTH) {
@@ -61,7 +72,18 @@ public class PlayerMoveListener extends Listener {
                 yaw -= 90;
             }
 
-            entityPlayer.setYHeadRot(Math.min(Math.max(yaw % 360, -70), 70));
+            if (yaw < -180) {
+                yaw += 360;
+            }
+
+            if (yaw > 180) {
+                yaw -= 360;
+            }
+
+            yaw = Math.max(yaw, -70);
+            yaw = Math.min(yaw, 70);
+
+            entityPlayer.setYHeadRot(yaw);
 
             for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
                 ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
