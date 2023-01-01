@@ -2,7 +2,7 @@ package io.github.kale_ko.spigot_morphs.listeners;
 
 import java.util.UUID;
 import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -15,6 +15,10 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 import io.github.kale_ko.spigot_morphs.Main;
 import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public class PlayerMoveListener extends Listener {
     public PlayerMoveListener() {
@@ -34,15 +38,20 @@ public class PlayerMoveListener extends Listener {
             }
         }
 
-        if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
-            if (player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
-                player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).setRotation(player.getLocation().getYaw(), 0);
-            }
+        if (SitListener.seatEntities.containsKey(player.getUniqueId().toString())) {
+            SitListener.seatEntities.get(player.getUniqueId().toString()).setRotation(player.getLocation().getYaw(), 0);
         }
 
-        if (MetadataUtil.hasMetadata(player, "laying") && MetadataUtil.getMetadata(player, "laying").asBoolean()) {
-            if (((CraftWorld) player.getWorld()).getHandle().getEntity(MetadataUtil.getMetadata(player, "lay").asInt()) != null) {
-                ((CraftWorld) player.getWorld()).getHandle().getEntity(MetadataUtil.getMetadata(player, "lay").asInt()).setYHeadRot(player.getLocation().getYaw());
+        if (SitListener.layEntities.containsKey(player.getUniqueId().toString())) {
+            ServerPlayer entityPlayer = SitListener.layEntities.get(player.getUniqueId().toString());
+
+            entityPlayer.setRot(player.getLocation().getYaw(), player.getLocation().getPitch());
+            entityPlayer.setYHeadRot(player.getLocation().getYaw());
+
+            for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
+                ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
+                connection.send(new ClientboundMoveEntityPacket.Rot(entityPlayer.getId(), (byte) ((int) (entityPlayer.getXRot() * 256.0F / 360.0F)), (byte) ((int) (entityPlayer.getYRot() * 256.0F / 360.0F)), true));
+                connection.send(new ClientboundRotateHeadPacket(entityPlayer, (byte) ((int) (entityPlayer.getYHeadRot() * 256.0F / 360.0F))));
             }
         }
     }

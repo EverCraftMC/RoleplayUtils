@@ -36,12 +36,12 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.kale_ko.spigot_morphs.Data;
 import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
 import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.server.MinecraftServer;
@@ -61,17 +61,19 @@ public class SitListener extends Listener {
         }
     }
 
+    public static Map<String, Pig> seatEntities = new HashMap<String, Pig>();
+    public static Map<String, ServerPlayer> layEntities = new HashMap<String, ServerPlayer>();
+
     protected static Map<String, SkinCacheObject> skinsCache = new HashMap<String, SkinCacheObject>();
 
     public static void onSitStand(Player player) {
         if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
-            if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
-                if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).remove();
+            if (seatEntities.containsKey(player.getUniqueId().toString())) {
+                if (seatEntities.get(player.getUniqueId().toString()).isValid()) {
+                    seatEntities.get(player.getUniqueId().toString()).remove();
                 }
 
-                MetadataUtil.removeMetadata(player, "seat");
-                MetadataUtil.removeMetadata(player, "sitting");
+                seatEntities.remove(player.getUniqueId().toString());
             } else {
                 Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
             }
@@ -114,19 +116,14 @@ public class SitListener extends Listener {
             entity.setGravity(false);
             entity.setCollidable(false);
             entity.setInvulnerable(true);
+            entity.setInvisible(true);
             entity.setSilent(true);
             entity.setPersistent(true);
             entity.setRemoveWhenFarAway(false);
 
-            MetadataUtil.setMetadata(entity, "isSeat", true);
-            MetadataUtil.setMetadata(entity, "rider", player.getUniqueId().toString());
-
-            MetadataUtil.setMetadata(player, "sitting", true);
-            MetadataUtil.setMetadata(player, "seat", entity.getUniqueId().toString());
-
-            entity.setInvisible(true);
-
             entity.addPassenger(player);
+
+            seatEntities.put(player.getUniqueId().toString(), entity);
 
             if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType == Data.SittingType.LAYING) {
                 MinecraftServer server = ((CraftServer) Main.getInstance().getServer()).getServer();
@@ -172,9 +169,6 @@ public class SitListener extends Listener {
 
                 player.setInvisible(true);
 
-                MetadataUtil.setMetadata(player, "laying", true);
-                MetadataUtil.setMetadata(player, "lay", entityPlayer.getId());
-
                 entityPlayer.setPose(Pose.SLEEPING);
                 entityPlayer.setSleepingPos(new BlockPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ()));
                 entityPlayer.setPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ());
@@ -183,33 +177,34 @@ public class SitListener extends Listener {
                     ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
                     connection.send(new ClientboundSetEntityDataPacket(entityPlayer.getId(), entityPlayer.getEntityData().getNonDefaultValues()));
                     connection.send(new ClientboundTeleportEntityPacket(entityPlayer));
+                    connection.send(new ClientboundRotateHeadPacket(entityPlayer, (byte) ((int) (entityPlayer.getYHeadRot() * 256.0F / 360.0F))));
                 }
+
+                layEntities.put(player.getUniqueId().toString(), entityPlayer);
             }
         } else {
-            if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
-                if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())) != null) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString())).remove();
+            if (seatEntities.containsKey(player.getUniqueId().toString())) {
+                if (seatEntities.get(player.getUniqueId().toString()).isValid()) {
+                    seatEntities.get(player.getUniqueId().toString()).remove();
                 }
+
+                seatEntities.remove(player.getUniqueId().toString());
 
                 Location returnLocation = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation();
                 returnLocation.setPitch(player.getLocation().getPitch());
                 returnLocation.setYaw(player.getLocation().getYaw());
                 player.teleport(returnLocation, TeleportCause.PLUGIN);
-
-                MetadataUtil.removeMetadata(player, "seat");
-                MetadataUtil.removeMetadata(player, "sitting");
             }
 
-            if (MetadataUtil.hasMetadata(player, "laying") && MetadataUtil.getMetadata(player, "laying").asBoolean()) {
+            if (layEntities.containsKey(player.getUniqueId().toString())) {
                 for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
                     ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
-                    connection.send(new ClientboundRemoveEntitiesPacket(MetadataUtil.getMetadata(player, "lay").asInt()));
+                    connection.send(new ClientboundRemoveEntitiesPacket(layEntities.get(player.getUniqueId().toString()).getId()));
                 }
 
-                player.setInvisible(false);
+                layEntities.remove(player.getUniqueId().toString());
 
-                MetadataUtil.removeMetadata(player, "lay");
-                MetadataUtil.removeMetadata(player, "laying");
+                player.setInvisible(false);
             }
         }
     }
@@ -226,23 +221,35 @@ public class SitListener extends Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
-        if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
+        if (seatEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
+            if (seatEntities.get(event.getPlayer().getUniqueId().toString()).isValid()) {
+                seatEntities.get(event.getPlayer().getUniqueId().toString()).remove();
             }
 
-            MetadataUtil.removeMetadata(event.getPlayer(), "seat");
-            MetadataUtil.removeMetadata(event.getPlayer(), "sitting");
+            seatEntities.remove(event.getPlayer().getUniqueId().toString());
+        }
+
+        if (layEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
+            for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {
+                ServerGamePacketListenerImpl connection = ((CraftPlayer) player2).getHandle().connection;
+                connection.send(new ClientboundRemoveEntitiesPacket(layEntities.get(event.getPlayer().getUniqueId().toString()).getId()));
+            }
+
+            layEntities.remove(event.getPlayer().getUniqueId().toString());
+
+            event.getPlayer().setInvisible(false);
         }
     }
 
     @EventHandler
     public void onPlayerDismount(EntityDismountEvent event) {
         if (event.getEntity() instanceof Player player && event.getDismounted() instanceof Pig) {
-            if (MetadataUtil.hasMetadata(player, "sitting") && MetadataUtil.getMetadata(player, "sitting").asBoolean()) {
-                if (event.getDismounted().getUniqueId().equals(UUID.fromString(MetadataUtil.getMetadata(player, "seat").asString()))) {
+            if (seatEntities.containsKey(player.getUniqueId().toString()) && event.getDismounted().getUniqueId().equals(seatEntities.get(player.getUniqueId().toString()).getUniqueId())) {
+                if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = null;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
                     Main.getInstance().getPluginData().save();
 
                     onSitStand(player);
@@ -253,22 +260,29 @@ public class SitListener extends Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (MetadataUtil.hasMetadata(event.getPlayer(), "sitting") && MetadataUtil.getMetadata(event.getPlayer(), "sitting").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "seat").asString())).remove();
-            }
+        if (event.getCause() != TeleportCause.PLUGIN && event.getCause() != TeleportCause.DISMOUNT) {
+            if (Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
+                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
+                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
+                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+                Main.getInstance().getPluginData().save();
 
-            MetadataUtil.removeMetadata(event.getPlayer(), "seat");
-            MetadataUtil.removeMetadata(event.getPlayer(), "sitting");
+                onSitStand(event.getPlayer());
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDie(PlayerRespawnEvent event) {
-        Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
-        Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-        Main.getInstance().getPluginData().save();
+        if (Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
+            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
+            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
+            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+            Main.getInstance().getPluginData().save();
 
-        onSitStand(event.getPlayer());
+            onSitStand(event.getPlayer());
+        }
     }
 }
