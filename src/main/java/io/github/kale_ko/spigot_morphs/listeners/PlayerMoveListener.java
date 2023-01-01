@@ -41,7 +41,7 @@ public class PlayerMoveListener extends Listener {
         }
 
         if (MetadataUtil.hasMetadata(player, "laying") && MetadataUtil.getMetadata(player, "laying").asBoolean()) {
-            if (player.getWorld().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "lay").asString())) != null) {
+            if (((CraftWorld) player.getWorld()).getHandle().getEntity(MetadataUtil.getMetadata(player, "lay").asInt()) != null) {
                 ((CraftWorld) player.getWorld()).getHandle().getEntity(MetadataUtil.getMetadata(player, "lay").asInt()).setYHeadRot(player.getLocation().getYaw());
             }
         }
