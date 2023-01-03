@@ -1,6 +1,5 @@
 package io.github.evercraftmc.rp_utils.listeners;
 
-import java.util.UUID;
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
@@ -15,7 +14,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 import io.github.evercraftmc.rp_utils.Main;
-import io.github.evercraftmc.rp_utils.util.bukkit.MetadataUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,10 +32,8 @@ public class PlayerMoveListener extends Listener {
     }
 
     public void onPlayerMove(Player player) {
-        if (MetadataUtil.hasMetadata(player, "morphed") && MetadataUtil.getMetadata(player, "morphed").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())).teleport(player.getLocation(), TeleportCause.PLUGIN);
-            }
+        if (MorphListener.morphEntities.containsKey(player.getUniqueId().toString())) {
+            MorphListener.morphEntities.get(player.getUniqueId().toString()).teleport(player.getLocation(), TeleportCause.PLUGIN);
         }
 
         if (SitListener.seatEntities.containsKey(player.getUniqueId().toString())) {
@@ -123,20 +119,16 @@ public class PlayerMoveListener extends Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerToggleFlightEvent event) {
-        if (MetadataUtil.hasMetadata(event.getPlayer(), "morphed") && MetadataUtil.getMetadata(event.getPlayer(), "morphed").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())).setGravity(!event.getPlayer().isFlying());
-            }
+        if (MorphListener.morphEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
+            MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(!event.getPlayer().isFlying());
         }
     }
 
     @EventHandler
     public void onPlayerMove(PlayerGameModeChangeEvent event) {
-        if (MetadataUtil.hasMetadata(event.getPlayer(), "morphed") && MetadataUtil.getMetadata(event.getPlayer(), "morphed").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())) != null) {
-                if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())).setGravity(true);
-                }
+        if (MorphListener.morphEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
+            if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(true);
             }
         }
     }

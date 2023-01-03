@@ -1,6 +1,7 @@
 package io.github.evercraftmc.rp_utils.listeners;
 
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -11,19 +12,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import io.github.evercraftmc.rp_utils.Data;
 import io.github.evercraftmc.rp_utils.Main;
-import io.github.evercraftmc.rp_utils.util.bukkit.MetadataUtil;
 import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
 
 public class MorphListener extends Listener {
+    public static final Map<String, Entity> morphEntities = new HashMap<String, Entity>();
+
     public static void onMorphChange(Player player) {
         if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed) {
-            if (MetadataUtil.hasMetadata(player, "morphed") && MetadataUtil.getMetadata(player, "morphed").asBoolean()) {
-                if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())) != null) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())).remove();
-                }
-
-                MetadataUtil.removeMetadata(player, "morph");
-                MetadataUtil.removeMetadata(player, "morphed");
+            if (morphEntities.containsKey(player.getUniqueId().toString())) {
+                morphEntities.get(player.getUniqueId().toString()).remove();
+                morphEntities.remove(player.getUniqueId().toString());
             }
 
             Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph);
@@ -42,27 +40,19 @@ public class MorphListener extends Listener {
                 player.setAbsorptionAmount(livingEntity.getAbsorptionAmount());
             }
 
-            MetadataUtil.setMetadata(entity, "morphed", true);
-            MetadataUtil.setMetadata(entity, "morph", player.getUniqueId().toString());
-
             player.setInvisible(true);
             player.setCollidable(false);
 
-            MetadataUtil.setMetadata(player, "morphed", true);
-            MetadataUtil.setMetadata(player, "morph", entity.getUniqueId().toString());
+            morphEntities.put(player.getUniqueId().toString(), entity);
         } else {
-            if (MetadataUtil.hasMetadata(player, "morphed") && MetadataUtil.getMetadata(player, "morphed").asBoolean()) {
-                if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())) != null) {
-                    Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(player, "morph").asString())).remove();
-                }
+            if (morphEntities.containsKey(player.getUniqueId().toString())) {
+                morphEntities.get(player.getUniqueId().toString()).remove();
+                morphEntities.remove(player.getUniqueId().toString());
 
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 
                 player.setInvisible(false);
                 player.setCollidable(true);
-
-                MetadataUtil.removeMetadata(player, "morph");
-                MetadataUtil.removeMetadata(player, "morphed");
             }
         }
     }
@@ -79,13 +69,9 @@ public class MorphListener extends Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
-        if (MetadataUtil.hasMetadata(event.getPlayer(), "morphed") && MetadataUtil.getMetadata(event.getPlayer(), "morphed").asBoolean()) {
-            if (Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())) != null) {
-                Main.getInstance().getServer().getEntity(UUID.fromString(MetadataUtil.getMetadata(event.getPlayer(), "morph").asString())).remove();
-            }
-
-            MetadataUtil.removeMetadata(event.getPlayer(), "morph");
-            MetadataUtil.removeMetadata(event.getPlayer(), "morphed");
+        if (morphEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
+            morphEntities.get(event.getPlayer().getUniqueId().toString()).remove();
+            morphEntities.remove(event.getPlayer().getUniqueId().toString());
         }
     }
 
