@@ -4,7 +4,7 @@ name: RoleplayUtils
 version: ${plugin_version}
 description: A collection of useful commands and more for roleplay servers
 author: Kale Ko
-website: https://github.com/EverCraft/Roleplay-Utils
+website: https://github.com/EverCraft/RoleplayUtils
 
 api-version: "1.19"
 load: POSTWORLD
