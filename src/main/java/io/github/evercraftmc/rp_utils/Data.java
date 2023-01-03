@@ -1,9 +1,9 @@
-package io.github.kale_ko.spigot_morphs;
+package io.github.evercraftmc.rp_utils;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.entity.EntityType;
-import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
+import io.github.evercraftmc.rp_utils.util.types.SerializableLocation;
 
 public class Data {
     public enum SittingType {

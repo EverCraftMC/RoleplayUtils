@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.util.formatting;
+package io.github.evercraftmc.rp_utils.util.formatting;
 
 import java.util.regex.Pattern;
 

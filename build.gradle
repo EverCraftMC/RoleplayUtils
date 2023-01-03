@@ -6,8 +6,8 @@ plugins {
 sourceCompatibility = JavaVersion.toVersion(project.java_version)
 targetCompatibility = JavaVersion.toVersion(project.java_version)
 
-archivesBaseName = "spigot_morphs"
-group = "io.github.kale_ko"
+archivesBaseName = "rp_utils"
+group = "io.github.evercraftmc"
 version = project.plugin_version
 
 repositories {

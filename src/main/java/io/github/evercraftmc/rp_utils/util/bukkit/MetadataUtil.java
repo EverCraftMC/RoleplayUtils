@@ -1,9 +1,9 @@
-package io.github.kale_ko.spigot_morphs.util.bukkit;
+package io.github.evercraftmc.rp_utils.util.bukkit;
 
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
-import io.github.kale_ko.spigot_morphs.Main;
+import io.github.evercraftmc.rp_utils.Main;
 
 public class MetadataUtil {
     public static Boolean hasMetadata(Metadatable object, String key) {

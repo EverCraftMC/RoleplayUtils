@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.listeners;
+package io.github.evercraftmc.rp_utils.listeners;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,9 +34,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import io.github.kale_ko.spigot_morphs.Data;
-import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
+import io.github.evercraftmc.rp_utils.Data;
+import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.rp_utils.util.types.SerializableLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;

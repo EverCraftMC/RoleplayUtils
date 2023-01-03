@@ -1,19 +1,19 @@
-package io.github.kale_ko.spigot_morphs;
+package io.github.evercraftmc.rp_utils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
-import io.github.kale_ko.spigot_morphs.commands.Command;
-import io.github.kale_ko.spigot_morphs.commands.morph.MorphCommand;
-import io.github.kale_ko.spigot_morphs.commands.sit.LayCommand;
-import io.github.kale_ko.spigot_morphs.commands.sit.SitCommand;
-import io.github.kale_ko.spigot_morphs.config.FileConfig;
-import io.github.kale_ko.spigot_morphs.listeners.Listener;
-import io.github.kale_ko.spigot_morphs.listeners.MorphListener;
-import io.github.kale_ko.spigot_morphs.listeners.PlayerMoveListener;
-import io.github.kale_ko.spigot_morphs.listeners.SitListener;
+import io.github.evercraftmc.rp_utils.commands.Command;
+import io.github.evercraftmc.rp_utils.commands.morph.MorphCommand;
+import io.github.evercraftmc.rp_utils.commands.sit.LayCommand;
+import io.github.evercraftmc.rp_utils.commands.sit.SitCommand;
+import io.github.evercraftmc.rp_utils.config.FileConfig;
+import io.github.evercraftmc.rp_utils.listeners.Listener;
+import io.github.evercraftmc.rp_utils.listeners.MorphListener;
+import io.github.evercraftmc.rp_utils.listeners.PlayerMoveListener;
+import io.github.evercraftmc.rp_utils.listeners.SitListener;
 
 public class Main extends JavaPlugin {
     private static Main Instance;
@@ -51,10 +51,10 @@ public class Main extends JavaPlugin {
 
         this.commands = new ArrayList<Command>();
 
-        this.commands.add(new MorphCommand("morph", "Morph into another entity", Arrays.asList(), "spigot_morphs.commands.morph").register());
+        this.commands.add(new MorphCommand("morph", "Morph into another entity", Arrays.asList(), "rp_utils.commands.morph").register());
 
-        this.commands.add(new SitCommand("sit", "Sit on the floor", Arrays.asList(), "spigot_morphs.commands.sit").register());
-        this.commands.add(new LayCommand("lay", "Lay on the floor", Arrays.asList("sleep"), "spigot_morphs.commands.lay").register());
+        this.commands.add(new SitCommand("sit", "Sit on the floor", Arrays.asList(), "rp_utils.commands.sit").register());
+        this.commands.add(new LayCommand("lay", "Lay on the floor", Arrays.asList("sleep"), "rp_utils.commands.lay").register());
 
         this.getLogger().info("Finished loading commands");
 

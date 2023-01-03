@@ -1,10 +1,10 @@
-main: io.github.kale_ko.spigot_morphs.Main
+main: io.github.evercraftmc.rp_utils.Main
 
-name: SpigotMorphs
+name: RoleplayUtils
 version: ${plugin_version}
-description: A custom plugin that allows you to morph into different mods
+description: A collection of useful commands and more for roleplay servers
 author: Kale Ko
-website: https://github.com/Kale-Ko/Spigot-Morphs
+website: https://github.com/EverCraft/Roleplay-Utils
 
 api-version: "1.19"
 load: POSTWORLD

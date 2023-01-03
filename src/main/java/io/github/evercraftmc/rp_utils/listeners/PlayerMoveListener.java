@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.listeners;
+package io.github.evercraftmc.rp_utils.listeners;
 
 import java.util.UUID;
 import org.bukkit.GameMode;
@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
-import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.util.bukkit.MetadataUtil;
+import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.rp_utils.util.bukkit.MetadataUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.server.level.ServerPlayer;

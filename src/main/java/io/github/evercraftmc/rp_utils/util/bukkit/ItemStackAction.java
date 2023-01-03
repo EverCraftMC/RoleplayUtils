@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.util.bukkit;
+package io.github.evercraftmc.rp_utils.util.bukkit;
 
 import java.util.function.Consumer;
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import io.github.kale_ko.spigot_morphs.listeners.Listener;
+import io.github.evercraftmc.rp_utils.listeners.Listener;
 
 public class ItemStackAction extends Listener {
     private ItemStack stack;

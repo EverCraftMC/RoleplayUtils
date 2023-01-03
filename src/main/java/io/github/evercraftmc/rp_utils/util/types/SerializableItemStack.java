@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.util.types;
+package io.github.evercraftmc.rp_utils.util.types;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
-import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
+import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
 import net.kyori.adventure.text.Component;
 
 public class SerializableItemStack {

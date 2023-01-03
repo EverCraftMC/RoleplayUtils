@@ -1,7 +1,7 @@
-package io.github.kale_ko.spigot_morphs.util.types;
+package io.github.evercraftmc.rp_utils.util.types;
 
 import org.bukkit.Location;
-import io.github.kale_ko.spigot_morphs.Main;
+import io.github.evercraftmc.rp_utils.Main;
 
 public class SerializableLocation {
     private String world = "world";

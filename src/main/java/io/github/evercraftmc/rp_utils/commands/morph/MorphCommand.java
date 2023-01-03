@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.commands.morph;
+package io.github.evercraftmc.rp_utils.commands.morph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,12 +6,12 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.commands.Command;
-import io.github.kale_ko.spigot_morphs.listeners.MorphListener;
-import io.github.kale_ko.spigot_morphs.util.StringUtils;
-import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
-import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
+import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.rp_utils.commands.Command;
+import io.github.evercraftmc.rp_utils.listeners.MorphListener;
+import io.github.evercraftmc.rp_utils.util.StringUtils;
+import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
 
 public class MorphCommand extends Command {
     public MorphCommand(String name, String description, List<String> aliases, String permission) {

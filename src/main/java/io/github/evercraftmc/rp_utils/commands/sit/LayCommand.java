@@ -1,18 +1,18 @@
-package io.github.kale_ko.spigot_morphs.commands.sit;
+package io.github.evercraftmc.rp_utils.commands.sit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import io.github.kale_ko.spigot_morphs.Data;
-import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.commands.Command;
-import io.github.kale_ko.spigot_morphs.listeners.SitListener;
-import io.github.kale_ko.spigot_morphs.util.StringUtils;
-import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
-import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
-import io.github.kale_ko.spigot_morphs.util.types.SerializableLocation;
+import io.github.evercraftmc.rp_utils.Data;
+import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.rp_utils.commands.Command;
+import io.github.evercraftmc.rp_utils.listeners.SitListener;
+import io.github.evercraftmc.rp_utils.util.StringUtils;
+import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
+import io.github.evercraftmc.rp_utils.util.types.SerializableLocation;
 
 public class LayCommand extends Command {
     public LayCommand(String name, String description, List<String> aliases, String permission) {

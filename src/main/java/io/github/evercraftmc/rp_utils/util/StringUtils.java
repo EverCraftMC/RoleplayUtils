@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.util;
+package io.github.evercraftmc.rp_utils.util;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

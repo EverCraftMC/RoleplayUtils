@@ -1,12 +1,12 @@
-package io.github.kale_ko.spigot_morphs.commands;
+package io.github.evercraftmc.rp_utils.commands;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import io.github.kale_ko.spigot_morphs.Main;
-import io.github.kale_ko.spigot_morphs.util.formatting.ComponentFormatter;
-import io.github.kale_ko.spigot_morphs.util.formatting.TextFormatter;
+import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
 
 public abstract class Command extends org.bukkit.command.Command {
     protected Command(String name, String description, List<String> aliases, String permission) {

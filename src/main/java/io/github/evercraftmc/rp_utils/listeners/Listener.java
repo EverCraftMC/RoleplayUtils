@@ -1,7 +1,7 @@
-package io.github.kale_ko.spigot_morphs.listeners;
+package io.github.evercraftmc.rp_utils.listeners;
 
 import org.bukkit.event.HandlerList;
-import io.github.kale_ko.spigot_morphs.Main;
+import io.github.evercraftmc.rp_utils.Main;
 
 public abstract class Listener implements org.bukkit.event.Listener {
     public Listener register() {

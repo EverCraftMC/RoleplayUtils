@@ -1,4 +1,4 @@
-package io.github.kale_ko.spigot_morphs.config;
+package io.github.evercraftmc.rp_utils.config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
