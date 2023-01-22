@@ -32,7 +32,7 @@ public class MorphListener extends Listener {
             entity.customName(ComponentFormatter.stringToComponent(player.getName()));
             entity.setCustomNameVisible(true);
 
-            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph != null) {
+            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt != null) {
                 try {
                     ((CraftEntity) entity).getHandle().load(TagParser.parseTag(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt));
                 } catch (CommandSyntaxException e) {
