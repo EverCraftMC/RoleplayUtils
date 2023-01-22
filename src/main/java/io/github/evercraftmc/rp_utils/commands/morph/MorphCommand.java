@@ -24,6 +24,7 @@ public class MorphCommand extends Command {
                 if (args[0].equalsIgnoreCase("clear")) {
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed = false;
                     Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph = null;
+                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
                     Main.getInstance().getPluginData().save();
 
                     MorphListener.onMorphChange(player);
@@ -35,6 +36,19 @@ public class MorphCommand extends Command {
 
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed = true;
                         Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph = entityType;
+
+                        if (args.length > 1) {
+                            StringBuilder nbtBuilder = new StringBuilder();
+
+                            for (Integer i = 1; i < args.length; i++) {
+                                nbtBuilder.append(args[i] + " ");
+                            }
+
+                            Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = nbtBuilder.toString().trim();
+                        } else {
+                            Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
+                        }
+
                         Main.getInstance().getPluginData().save();
 
                         MorphListener.onMorphChange(player);

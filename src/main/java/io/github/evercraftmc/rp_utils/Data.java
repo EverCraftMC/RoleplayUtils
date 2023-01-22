@@ -13,6 +13,7 @@ public class Data {
     public static class Player {
         public Boolean isMorphed = false;
         public EntityType currentMorph = null;
+        public String currentMorphNbt = null;
 
         public Boolean isSitting = false;
         public SittingType sittingType = null;

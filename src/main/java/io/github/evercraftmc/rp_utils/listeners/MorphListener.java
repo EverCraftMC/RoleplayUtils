@@ -3,6 +3,7 @@ package io.github.evercraftmc.rp_utils.listeners;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -10,9 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.evercraftmc.rp_utils.Data;
 import io.github.evercraftmc.rp_utils.Main;
 import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import net.minecraft.nbt.TagParser;
 
 public class MorphListener extends Listener {
     public static final Map<String, Entity> morphEntities = new HashMap<String, Entity>();
@@ -28,6 +31,15 @@ public class MorphListener extends Listener {
 
             entity.customName(ComponentFormatter.stringToComponent(player.getName()));
             entity.setCustomNameVisible(true);
+
+            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph != null) {
+                try {
+                    ((CraftEntity) entity).getHandle().load(TagParser.parseTag(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt));
+                } catch (CommandSyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+
             entity.setPersistent(true);
 
             if (entity instanceof LivingEntity livingEntity) {
