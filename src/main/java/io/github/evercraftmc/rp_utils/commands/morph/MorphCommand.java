@@ -81,6 +81,9 @@ public class MorphCommand extends Command {
             for (EntityType entityType : EntityType.values()) {
                 list.add("minecraft:" + entityType.toString().toLowerCase());
             }
+
+            list.remove("minecraft:player");
+            list.remove("minecraft:ender_dragon");
         } else {
             return Arrays.asList();
         }
