@@ -3,6 +3,7 @@ package io.github.evercraftmc.rp_utils.listeners;
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -127,8 +128,24 @@ public class PlayerMoveListener extends Listener {
     @EventHandler
     public void onPlayerMove(PlayerGameModeChangeEvent event) {
         if (MorphListener.morphEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
-            if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+            if (event.getNewGameMode().equals(GameMode.CREATIVE) || event.getNewGameMode().equals(GameMode.SPECTATOR)) {
+                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setInvulnerable(true);
+            } else {
+                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setInvulnerable(false);
+            }
+
+            if (event.getPlayer().isFlying()) {
+                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(false);
+            } else {
                 MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(true);
+            }
+
+            if (MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()) instanceof LivingEntity livingEntity) {
+                if (event.getNewGameMode().equals(GameMode.SPECTATOR)) {
+                    livingEntity.setInvisible(true);
+                } else {
+                    livingEntity.setInvisible(false);
+                }
             }
         }
     }

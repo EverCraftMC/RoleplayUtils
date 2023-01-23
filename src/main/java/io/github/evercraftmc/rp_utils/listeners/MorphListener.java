@@ -2,6 +2,7 @@ package io.github.evercraftmc.rp_utils.listeners;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
@@ -42,10 +43,26 @@ public class MorphListener extends Listener {
 
             entity.setPersistent(true);
 
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                entity.setInvulnerable(true);
+            } else {
+                entity.setInvulnerable(false);
+            }
+
+            if (player.isFlying()) {
+                entity.setGravity(false);
+            } else {
+                entity.setGravity(true);
+            }
+
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.setAI(false);
                 livingEntity.setCollidable(false);
                 livingEntity.setRemoveWhenFarAway(false);
+
+                if (player.getGameMode() == GameMode.SPECTATOR) {
+                    livingEntity.setInvisible(true);
+                }
 
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
                 player.setHealth(livingEntity.getHealth());
