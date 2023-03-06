@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.util.types;
+package io.github.evercraftmc.roleplayutils.util.types;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;

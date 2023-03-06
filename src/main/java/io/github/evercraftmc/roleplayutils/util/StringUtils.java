@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.util;
+package io.github.evercraftmc.roleplayutils.util;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

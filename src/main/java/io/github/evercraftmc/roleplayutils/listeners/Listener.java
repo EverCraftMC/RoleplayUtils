@@ -1,7 +1,7 @@
-package io.github.evercraftmc.rp_utils.listeners;
+package io.github.evercraftmc.roleplayutils.listeners;
 
 import org.bukkit.event.HandlerList;
-import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.roleplayutils.Main;
 
 public abstract class Listener implements org.bukkit.event.Listener {
     public Listener register() {

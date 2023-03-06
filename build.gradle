@@ -6,18 +6,20 @@ plugins {
 sourceCompatibility = JavaVersion.toVersion(project.java_version)
 targetCompatibility = JavaVersion.toVersion(project.java_version)
 
-archivesBaseName = "rp_utils"
+archivesBaseName = "roleplayutils"
 group = "io.github.evercraftmc"
 version = project.plugin_version
 
 repositories {
     mavenCentral()
+    maven { url "https://papermc.io/repo/repository/maven-public/" }
+	maven { url "https://jitpack.io" }
 }
 
 dependencies {
     paperweightDevelopmentBundle "io.papermc.paper:dev-bundle:${project.paper_version}"
 
-    compileOnly "com.google.code.gson:gson:${project.gson_version}"
+    implementation "com.github.Kale-Ko:EJCL:${project.ejcl_version}"
 }
 
 tasks {
@@ -26,7 +28,20 @@ tasks {
     }
 }
 
+jar {
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
+    archiveVersion = rootProject.version + "-" + project.version
+
+    duplicatesStrategy = "exclude"
+    from(configurations.runtimeClasspath.collect { it.isDirectory() ? null : zipTree(it).matching { exclude "META-INF/**" } })
+}
+
 tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
     options.encoding = "UTF-8"
 }
 
@@ -35,5 +50,33 @@ processResources {
 
     filesMatching("plugin.yml") {
         expand "plugin_version": project.plugin_version
+    }
+}
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
+tasks.register("upload") {
+    dependsOn subprojects.collect { it.tasks.build }
+
+    doLast {
+        def path = System.getenv("EVERCRAFT_PATH")
+        def servers = System.getenv("EVERCRAFT_SERVERS").split(";")
+
+        servers.each() {
+            def server = it
+
+            if ((System.getProperty("type") == null || System.getProperty("type").equalsIgnoreCase(server.split(":")[1])) && findProject(":" + server.split(":")[1]) != null) {
+                file(Paths.get(path + server.split(":")[0] + server.split(":")[2])).listFiles().each() {
+                    if (it.getName().startsWith("RoleplayUtils-") && it.getName().endsWith(".jar")) {
+                        it.delete()
+                    }
+                }
+
+                if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
+                    Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + project(":" + server.split(":")[1]).tasks.reobfJar.outputs.files[0].getName().replace("-dev", "")))
+                }
+            }
+        }
     }
 }

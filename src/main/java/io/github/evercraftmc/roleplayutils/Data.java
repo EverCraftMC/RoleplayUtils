@@ -1,9 +1,9 @@
-package io.github.evercraftmc.rp_utils;
+package io.github.evercraftmc.roleplayutils;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.entity.EntityType;
-import io.github.evercraftmc.rp_utils.util.types.SerializableLocation;
+import io.github.evercraftmc.roleplayutils.util.types.SerializableLocation;
 
 public class Data {
     public enum SittingType {

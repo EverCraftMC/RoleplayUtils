@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.util.bukkit;
+package io.github.evercraftmc.roleplayutils.util.bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import io.github.evercraftmc.rp_utils.listeners.Listener;
-import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
-import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
+import io.github.evercraftmc.roleplayutils.listeners.Listener;
+import io.github.evercraftmc.roleplayutils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.roleplayutils.util.formatting.TextFormatter;
 
 public class ChestGUI extends Listener {
     protected Inventory inv;

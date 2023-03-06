@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.listeners;
+package io.github.evercraftmc.roleplayutils.listeners;
 
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
-import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.roleplayutils.Main;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.server.level.ServerPlayer;

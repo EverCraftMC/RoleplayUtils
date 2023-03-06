@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.listeners;
+package io.github.evercraftmc.roleplayutils.listeners;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,9 +34,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import io.github.evercraftmc.rp_utils.Data;
-import io.github.evercraftmc.rp_utils.Main;
-import io.github.evercraftmc.rp_utils.util.types.SerializableLocation;
+import io.github.evercraftmc.roleplayutils.Data;
+import io.github.evercraftmc.roleplayutils.Main;
+import io.github.evercraftmc.roleplayutils.util.types.SerializableLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
@@ -67,7 +67,7 @@ public class SitListener extends Listener {
     protected static final Map<String, SkinCacheObject> skinsCache = new HashMap<String, SkinCacheObject>();
 
     public static void onSitStand(Player player) {
-        if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
+        if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
             if (seatEntities.containsKey(player.getUniqueId().toString())) {
                 if (seatEntities.get(player.getUniqueId().toString()).isValid()) {
                     seatEntities.get(player.getUniqueId().toString()).remove();
@@ -75,10 +75,10 @@ public class SitListener extends Listener {
 
                 seatEntities.remove(player.getUniqueId().toString());
             } else {
-                Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
+                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
             }
 
-            Location location = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation();
+            Location location = Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation();
             double offset = -1;
             double layOffset = 0;
 
@@ -92,7 +92,7 @@ public class SitListener extends Listener {
 
             Location layLocation = location.clone();
 
-            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType == Data.SittingType.LAYING) {
+            if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType == Data.SittingType.LAYING) {
                 if (location.clone().getBlock().getBlockData() instanceof Bed bed) {
                     offset = -0.6875;
                     layOffset = 0.1875;
@@ -125,7 +125,7 @@ public class SitListener extends Listener {
 
             seatEntities.put(player.getUniqueId().toString(), entity);
 
-            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType == Data.SittingType.LAYING) {
+            if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType == Data.SittingType.LAYING) {
                 MinecraftServer server = ((CraftServer) Main.getInstance().getServer()).getServer();
                 ServerLevel world = ((CraftWorld) Main.getInstance().getServer().getWorlds().get(0)).getHandle();
 
@@ -189,7 +189,7 @@ public class SitListener extends Listener {
 
                 seatEntities.remove(player.getUniqueId().toString());
 
-                Location returnLocation = Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation();
+                Location returnLocation = Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation();
                 returnLocation.setPitch(player.getLocation().getPitch());
                 returnLocation.setYaw(player.getLocation().getYaw());
                 player.teleport(returnLocation, TeleportCause.PLUGIN);
@@ -210,9 +210,13 @@ public class SitListener extends Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!Main.getInstance().getPluginData().getParsed().players.containsKey(event.getPlayer().getUniqueId().toString())) {
-            Main.getInstance().getPluginData().getParsed().players.put(event.getPlayer().getUniqueId().toString(), new Data.Player());
-            Main.getInstance().getPluginData().save();
+        if (!Main.getInstance().getPluginData().get().players.containsKey(event.getPlayer().getUniqueId().toString())) {
+            Main.getInstance().getPluginData().get().players.put(event.getPlayer().getUniqueId().toString(), new Data.Player());
+            try {
+                Main.getInstance().getPluginData().save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         onSitStand(event.getPlayer());
@@ -244,16 +248,24 @@ public class SitListener extends Listener {
     public void onPlayerDismount(EntityDismountEvent event) {
         if (event.getEntity() instanceof Player player && event.getDismounted() instanceof Pig) {
             if (seatEntities.containsKey(player.getUniqueId().toString()) && event.getDismounted().getUniqueId().equals(seatEntities.get(player.getUniqueId().toString()).getUniqueId())) {
-                if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting) {
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isSitting = false;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingType = null;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingLocation = null;
-                    Main.getInstance().getPluginData().save();
+                if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = null;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     onSitStand(player);
 
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
-                    Main.getInstance().getPluginData().save();
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -262,32 +274,48 @@ public class SitListener extends Listener {
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.getCause() != TeleportCause.PLUGIN && event.getCause() != TeleportCause.DISMOUNT) {
-            if (Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
-                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
-                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
-                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-                Main.getInstance().getPluginData().save();
+            if (Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+                Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
+                Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
+                Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
+                try {
+                    Main.getInstance().getPluginData().save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 onSitStand(event.getPlayer());
 
-                Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
-                Main.getInstance().getPluginData().save();
+                Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+                try {
+                    Main.getInstance().getPluginData().save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     @EventHandler
     public void onPlayerDie(PlayerRespawnEvent event) {
-        if (Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
-            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
-            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
-            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
-            Main.getInstance().getPluginData().save();
+        if (Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+            Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
+            Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
+            Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
+            try {
+                Main.getInstance().getPluginData().save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             onSitStand(event.getPlayer());
 
-            Main.getInstance().getPluginData().getParsed().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
-            Main.getInstance().getPluginData().save();
+            Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingFromLocation = null;
+            try {
+                Main.getInstance().getPluginData().save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

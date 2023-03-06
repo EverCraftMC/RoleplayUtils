@@ -1,17 +1,18 @@
-package io.github.evercraftmc.rp_utils.commands.morph;
+package io.github.evercraftmc.roleplayutils.commands.morph;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import io.github.evercraftmc.rp_utils.Main;
-import io.github.evercraftmc.rp_utils.commands.Command;
-import io.github.evercraftmc.rp_utils.listeners.MorphListener;
-import io.github.evercraftmc.rp_utils.util.StringUtils;
-import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
-import io.github.evercraftmc.rp_utils.util.formatting.TextFormatter;
+import io.github.evercraftmc.roleplayutils.Main;
+import io.github.evercraftmc.roleplayutils.commands.Command;
+import io.github.evercraftmc.roleplayutils.listeners.MorphListener;
+import io.github.evercraftmc.roleplayutils.util.StringUtils;
+import io.github.evercraftmc.roleplayutils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.roleplayutils.util.formatting.TextFormatter;
 
 public class MorphCommand extends Command {
     public MorphCommand(String name, String description, List<String> aliases, String permission) {
@@ -22,10 +23,14 @@ public class MorphCommand extends Command {
         if (sender instanceof Player player) {
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("clear")) {
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed = false;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph = null;
-                    Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
-                    Main.getInstance().getPluginData().save();
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed = false;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorph = null;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     MorphListener.onMorphChange(player);
 
@@ -34,8 +39,8 @@ public class MorphCommand extends Command {
                     try {
                         EntityType entityType = EntityType.valueOf(args[0].replace("minecraft:", "").replace("-", "_").toUpperCase());
 
-                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed = true;
-                        Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph = entityType;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed = true;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorph = entityType;
 
                         if (args.length > 1) {
                             StringBuilder nbtBuilder = new StringBuilder();
@@ -44,12 +49,16 @@ public class MorphCommand extends Command {
                                 nbtBuilder.append(args[i] + " ");
                             }
 
-                            Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = nbtBuilder.toString().trim();
+                            Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = nbtBuilder.toString().trim();
                         } else {
-                            Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
+                            Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
                         }
 
-                        Main.getInstance().getPluginData().save();
+                        try {
+                            Main.getInstance().getPluginData().save();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         MorphListener.onMorphChange(player);
 
@@ -71,7 +80,7 @@ public class MorphCommand extends Command {
 
         if (args.length == 1) {
             if (sender instanceof Player player) {
-                if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed) {
+                if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed) {
                     list.add("clear");
                 }
             } else {

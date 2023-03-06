@@ -1,24 +1,25 @@
-package io.github.evercraftmc.rp_utils;
+package io.github.evercraftmc.roleplayutils;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
-import io.github.evercraftmc.rp_utils.commands.Command;
-import io.github.evercraftmc.rp_utils.commands.morph.MorphCommand;
-import io.github.evercraftmc.rp_utils.commands.sit.LayCommand;
-import io.github.evercraftmc.rp_utils.commands.sit.SitCommand;
-import io.github.evercraftmc.rp_utils.config.FileConfig;
-import io.github.evercraftmc.rp_utils.listeners.Listener;
-import io.github.evercraftmc.rp_utils.listeners.MorphListener;
-import io.github.evercraftmc.rp_utils.listeners.PlayerMoveListener;
-import io.github.evercraftmc.rp_utils.listeners.SitListener;
+import io.github.evercraftmc.roleplayutils.commands.Command;
+import io.github.evercraftmc.roleplayutils.commands.morph.MorphCommand;
+import io.github.evercraftmc.roleplayutils.commands.sit.LayCommand;
+import io.github.evercraftmc.roleplayutils.commands.sit.SitCommand;
+import io.github.evercraftmc.roleplayutils.listeners.Listener;
+import io.github.evercraftmc.roleplayutils.listeners.MorphListener;
+import io.github.evercraftmc.roleplayutils.listeners.PlayerMoveListener;
+import io.github.evercraftmc.roleplayutils.listeners.SitListener;
+import io.github.kale_ko.ejcl.file.FileConfig;
+import io.github.kale_ko.ejcl.file.JsonConfig;
 
 public class Main extends JavaPlugin {
     private static Main Instance;
 
-    private FileConfig<Data> data;
+    private JsonConfig<Data> data;
 
     private List<Command> commands;
     private List<Listener> listeners;
@@ -38,11 +39,11 @@ public class Main extends JavaPlugin {
 
         this.getLogger().info("Loading data..");
 
-        this.data = new FileConfig<Data>(Data.class, this.getDataFolder().getAbsolutePath() + File.separator + "data.json");
-        this.data.reload();
-
-        if (this.data.getParsed() != null) {
-            this.data.save();
+        this.data = new JsonConfig<Data>(Data.class, this.getDataFolder().toPath().resolve("data.json").toFile());
+        try {
+            this.data.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         this.getLogger().info("Finished loading data");
@@ -77,7 +78,11 @@ public class Main extends JavaPlugin {
 
         this.getLogger().info("Closing data..");
 
-        this.data.close();
+        try {
+            this.data.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.getLogger().info("Finished closing data..");
 

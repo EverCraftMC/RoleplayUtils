@@ -1,4 +1,4 @@
-package io.github.evercraftmc.rp_utils.util.formatting;
+package io.github.evercraftmc.roleplayutils.util.formatting;
 
 import java.util.regex.Pattern;
 

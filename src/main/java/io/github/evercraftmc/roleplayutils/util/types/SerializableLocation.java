@@ -1,7 +1,7 @@
-package io.github.evercraftmc.rp_utils.util.types;
+package io.github.evercraftmc.roleplayutils.util.types;
 
 import org.bukkit.Location;
-import io.github.evercraftmc.rp_utils.Main;
+import io.github.evercraftmc.roleplayutils.Main;
 
 public class SerializableLocation {
     private String world = "world";

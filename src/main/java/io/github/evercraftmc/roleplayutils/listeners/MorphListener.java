@@ -1,5 +1,6 @@
-package io.github.evercraftmc.rp_utils.listeners;
+package io.github.evercraftmc.roleplayutils.listeners;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.GameMode;
@@ -13,29 +14,29 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.evercraftmc.rp_utils.Data;
-import io.github.evercraftmc.rp_utils.Main;
-import io.github.evercraftmc.rp_utils.util.formatting.ComponentFormatter;
+import io.github.evercraftmc.roleplayutils.Data;
+import io.github.evercraftmc.roleplayutils.Main;
+import io.github.evercraftmc.roleplayutils.util.formatting.ComponentFormatter;
 import net.minecraft.nbt.TagParser;
 
 public class MorphListener extends Listener {
     public static final Map<String, Entity> morphEntities = new HashMap<String, Entity>();
 
     public static void onMorphChange(Player player) {
-        if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).isMorphed) {
+        if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed) {
             if (morphEntities.containsKey(player.getUniqueId().toString())) {
                 morphEntities.get(player.getUniqueId().toString()).remove();
                 morphEntities.remove(player.getUniqueId().toString());
             }
 
-            Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorph);
+            Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorph);
 
             entity.customName(ComponentFormatter.stringToComponent(player.getName()));
             entity.setCustomNameVisible(true);
 
-            if (Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt != null) {
+            if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt != null) {
                 try {
-                    ((CraftEntity) entity).getHandle().load(TagParser.parseTag(Main.getInstance().getPluginData().getParsed().players.get(player.getUniqueId().toString()).currentMorphNbt));
+                    ((CraftEntity) entity).getHandle().load(TagParser.parseTag(Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt));
                 } catch (CommandSyntaxException e) {
                     e.printStackTrace();
                 }
@@ -88,9 +89,13 @@ public class MorphListener extends Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!Main.getInstance().getPluginData().getParsed().players.containsKey(event.getPlayer().getUniqueId().toString())) {
-            Main.getInstance().getPluginData().getParsed().players.put(event.getPlayer().getUniqueId().toString(), new Data.Player());
-            Main.getInstance().getPluginData().save();
+        if (!Main.getInstance().getPluginData().get().players.containsKey(event.getPlayer().getUniqueId().toString())) {
+            Main.getInstance().getPluginData().get().players.put(event.getPlayer().getUniqueId().toString(), new Data.Player());
+            try {
+                Main.getInstance().getPluginData().save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         onMorphChange(event.getPlayer());
