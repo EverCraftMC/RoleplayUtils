@@ -73,7 +73,7 @@ tasks.register("upload") {
             }
 
             if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
-                Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + tasks.reobfJar.outputs.files[0].getName().replace("-dev", "")))
+                Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + tasks.reobfJar.outputs.files[0].getName().replace("roleplayutils-", "/RoleplayUtils-").replace("-dev", "")))
             }
         }
     }
