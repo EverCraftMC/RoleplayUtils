@@ -57,7 +57,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 tasks.register("upload") {
-    dependsOn subprojects.collect { it.tasks.build }
+    dependsOn tasks.build
 
     doLast {
         def path = System.getenv("EVERCRAFT_PATH")
@@ -66,16 +66,14 @@ tasks.register("upload") {
         servers.each() {
             def server = it
 
-            if ((System.getProperty("type") == null || System.getProperty("type").equalsIgnoreCase(server.split(":")[1])) && findProject(":" + server.split(":")[1]) != null) {
-                file(Paths.get(path + server.split(":")[0] + server.split(":")[2])).listFiles().each() {
-                    if (it.getName().startsWith("RoleplayUtils-") && it.getName().endsWith(".jar")) {
-                        it.delete()
-                    }
+            file(Paths.get(path + server.split(":")[0] + server.split(":")[2])).listFiles().each() {
+                if (it.getName().startsWith("RoleplayUtils-") && it.getName().endsWith(".jar")) {
+                    it.delete()
                 }
+            }
 
-                if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
-                    Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + project(":" + server.split(":")[1]).tasks.reobfJar.outputs.files[0].getName().replace("-dev", "")))
-                }
+            if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
+                Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + tasks.reobfJar.outputs.files[0].getName().replace("-dev", "")))
             }
         }
     }
