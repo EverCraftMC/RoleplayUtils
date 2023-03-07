@@ -31,11 +31,21 @@ tasks {
 jar {
     sourceCompatibility = JavaVersion.toVersion(project.java_version)
     targetCompatibility = JavaVersion.toVersion(project.java_version)
+}
 
-    archiveVersion = rootProject.version + "-" + project.version
+tasks.register("fatJar", Jar) {
+    sourceCompatibility = JavaVersion.toVersion(project.java_version)
+    targetCompatibility = JavaVersion.toVersion(project.java_version)
+
+    archiveClassifier = "fat"
 
     duplicatesStrategy = "exclude"
-    from(configurations.runtimeClasspath.collect { it.isDirectory() ? null : zipTree(it).matching { exclude "META-INF/**" } })
+    from(zipTree(tasks.reobfJar.outputJar))
+    from(configurations.runtimeClasspath.collect { it.isDirectory() ? null : zipTree(it) })
+}
+
+build {
+    finalizedBy tasks.fatJar
 }
 
 tasks.withType(JavaCompile) {
@@ -73,7 +83,7 @@ tasks.register("upload") {
             }
 
             if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
-                Files.copy(tasks.reobfJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + tasks.reobfJar.outputs.files[0].getName().replace("roleplayutils-", "/RoleplayUtils-").replace("-dev", "")))
+                Files.copy(tasks.fatJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + tasks.fatJar.outputs.files[0].getName().replace("roleplayutils-", "/RoleplayUtils-").replace("-fat", "")))
             }
         }
     }
