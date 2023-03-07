@@ -1,4 +1,4 @@
-main: io.github.evercraftmc.rp_utils.Main
+main: io.github.evercraftmc.roleplayutils.Main
 
 name: RoleplayUtils
 version: ${plugin_version}
