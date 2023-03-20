@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

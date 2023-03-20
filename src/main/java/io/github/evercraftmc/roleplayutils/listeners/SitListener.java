@@ -15,9 +15,9 @@ import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Stairs;
-import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
@@ -169,7 +169,7 @@ public class SitListener extends Listener {
                 player.setInvisible(true);
 
                 entityPlayer.setPose(Pose.SLEEPING);
-                entityPlayer.setSleepingPos(new BlockPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ()));
+                entityPlayer.setSleepingPos(new BlockPos((int) Math.round(layLocation.getX()), (int) (Math.round(layLocation.getY()) + layOffset), (int) Math.round(layLocation.getZ())));
                 entityPlayer.setPos(layLocation.getX(), layLocation.getY() + layOffset, layLocation.getZ());
 
                 for (Player player2 : Main.getInstance().getServer().getOnlinePlayers()) {

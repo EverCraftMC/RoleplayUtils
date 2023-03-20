@@ -2,7 +2,7 @@ package io.github.evercraftmc.roleplayutils.listeners;
 
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
