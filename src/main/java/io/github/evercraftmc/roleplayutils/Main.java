@@ -14,12 +14,12 @@ import io.github.evercraftmc.roleplayutils.listeners.MorphListener;
 import io.github.evercraftmc.roleplayutils.listeners.PlayerMoveListener;
 import io.github.evercraftmc.roleplayutils.listeners.SitListener;
 import io.github.kale_ko.ejcl.file.FileConfig;
-import io.github.kale_ko.ejcl.file.JsonConfig;
+import io.github.kale_ko.ejcl.file.bjsl.JsonFileConfig;
 
 public class Main extends JavaPlugin {
     private static Main Instance;
 
-    private JsonConfig<Data> data;
+    private JsonFileConfig<Data> data;
 
     private List<Command> commands;
     private List<Listener> listeners;
@@ -39,7 +39,7 @@ public class Main extends JavaPlugin {
 
         this.getLogger().info("Loading data..");
 
-        this.data = new JsonConfig<Data>(Data.class, this.getDataFolder().toPath().resolve("data.json").toFile());
+        this.data = new JsonFileConfig<Data>(Data.class, this.getDataFolder().toPath().resolve("data.json").toFile());
         try {
             this.data.load();
         } catch (IOException e) {
