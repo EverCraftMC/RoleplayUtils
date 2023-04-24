@@ -67,7 +67,7 @@ public class SitListener extends Listener {
     protected static final Map<String, SkinCacheObject> skinsCache = new HashMap<String, SkinCacheObject>();
 
     public static void onSitStand(Player player) {
-        if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
+        if (Main.getInstance().getPluginData().get().players.containsKey(player.getUniqueId().toString()) && Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
             if (seatEntities.containsKey(player.getUniqueId().toString())) {
                 if (seatEntities.get(player.getUniqueId().toString()).isValid()) {
                     seatEntities.get(player.getUniqueId().toString()).remove();
@@ -248,7 +248,7 @@ public class SitListener extends Listener {
     public void onPlayerDismount(EntityDismountEvent event) {
         if (event.getEntity() instanceof Player player && event.getDismounted() instanceof Pig) {
             if (seatEntities.containsKey(player.getUniqueId().toString()) && event.getDismounted().getUniqueId().equals(seatEntities.get(player.getUniqueId().toString()).getUniqueId())) {
-                if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
+                if (Main.getInstance().getPluginData().get().players.containsKey(player.getUniqueId().toString()) && Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
                     Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = false;
                     Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = null;
                     Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = null;
@@ -274,7 +274,7 @@ public class SitListener extends Listener {
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.getCause() != TeleportCause.PLUGIN && event.getCause() != TeleportCause.DISMOUNT) {
-            if (Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+            if (Main.getInstance().getPluginData().get().players.containsKey(event.getPlayer().getUniqueId().toString()) && Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
                 Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
                 Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
                 Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
@@ -298,7 +298,7 @@ public class SitListener extends Listener {
 
     @EventHandler
     public void onPlayerDie(PlayerRespawnEvent event) {
-        if (Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
+        if (Main.getInstance().getPluginData().get().players.containsKey(event.getPlayer().getUniqueId().toString()) && Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting) {
             Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).isSitting = false;
             Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingType = null;
             Main.getInstance().getPluginData().get().players.get(event.getPlayer().getUniqueId().toString()).sittingLocation = null;
