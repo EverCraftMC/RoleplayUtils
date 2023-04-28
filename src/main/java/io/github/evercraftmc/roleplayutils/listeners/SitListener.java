@@ -71,11 +71,11 @@ public class SitListener extends Listener {
     public static void onSitStand(Player player) {
         if (Main.getInstance().getPluginData().get().players.containsKey(player.getUniqueId().toString()) && Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
             if (seatEntities.containsKey(player.getUniqueId().toString())) {
-                if (seatEntities.get(player.getUniqueId().toString()).isValid()) {
-                    seatEntities.get(player.getUniqueId().toString()).remove();
-                }
+                ArmorStand seatEntity = seatEntities.remove(player.getUniqueId().toString());
 
-                seatEntities.remove(player.getUniqueId().toString());
+                if (seatEntity.isValid()) {
+                    seatEntity.remove();
+                }
             } else {
                 Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
                 try {

@@ -25,8 +25,10 @@ public class MorphListener extends Listener {
     public static void onMorphChange(Player player) {
         if (Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed) {
             if (morphEntities.containsKey(player.getUniqueId().toString())) {
-                morphEntities.get(player.getUniqueId().toString()).remove();
-                morphEntities.remove(player.getUniqueId().toString());
+                Entity morphEntity = morphEntities.remove(player.getUniqueId().toString());
+                if (morphEntity.isValid()) {
+                    morphEntity.remove();
+                }
             }
 
             Entity entity = player.getWorld().spawnEntity(player.getLocation(), Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorph);
@@ -76,8 +78,10 @@ public class MorphListener extends Listener {
             morphEntities.put(player.getUniqueId().toString(), entity);
         } else {
             if (morphEntities.containsKey(player.getUniqueId().toString())) {
-                morphEntities.get(player.getUniqueId().toString()).remove();
-                morphEntities.remove(player.getUniqueId().toString());
+                Entity morphEntity = morphEntities.remove(player.getUniqueId().toString());
+                if (morphEntity.isValid()) {
+                    morphEntity.remove();
+                }
 
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 
@@ -104,8 +108,10 @@ public class MorphListener extends Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         if (morphEntities.containsKey(event.getPlayer().getUniqueId().toString())) {
-            morphEntities.get(event.getPlayer().getUniqueId().toString()).remove();
-            morphEntities.remove(event.getPlayer().getUniqueId().toString());
+            Entity morphEntity = morphEntities.remove(event.getPlayer().getUniqueId().toString());
+            if (morphEntity.isValid()) {
+                morphEntity.remove();
+            }
         }
     }
 
