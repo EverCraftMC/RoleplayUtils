@@ -22,28 +22,67 @@ public class LayCommand extends Command {
 
     public void run(CommandSender sender, String[] args) {
         if (sender instanceof Player player) {
-            if (!Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = true;
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.LAYING;
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
-                try {
-                    Main.getInstance().getPluginData().save();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if (args.length > 0) {
+                if (!Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
+                    if (args[0].equalsIgnoreCase("precise")) {
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.LAYING;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(player.getLocation().getX() % 1, 0.5, player.getLocation().getZ() % 1));
+                        try {
+                            Main.getInstance().getPluginData().save();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                SitListener.onSitStand(player);
+                        SitListener.onSitStand(player);
+                    } else {
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = true;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.LAYING;
+                        Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
+                        try {
+                            Main.getInstance().getPluginData().save();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        SitListener.onSitStand(player);
+                    }
+                } else {
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = null;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    SitListener.onSitStand(player);
+                }
             } else {
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = false;
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = null;
-                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = null;
-                try {
-                    Main.getInstance().getPluginData().save();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                if (!Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting) {
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = true;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = Data.SittingType.LAYING;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = SerializableLocation.fromBukkitLocation(player.getLocation().getBlock().getLocation().add(0.5, 0.5, 0.5));
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                SitListener.onSitStand(player);
+                    SitListener.onSitStand(player);
+                } else {
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isSitting = false;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingType = null;
+                    Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation = null;
+                    try {
+                        Main.getInstance().getPluginData().save();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    SitListener.onSitStand(player);
+                }
             }
         } else {
             sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cYou can't do that from the console")));
