@@ -78,6 +78,11 @@ public class SitListener extends Listener {
                 seatEntities.remove(player.getUniqueId().toString());
             } else {
                 Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation = SerializableLocation.fromBukkitLocation(player.getLocation());
+                try {
+                    Main.getInstance().getPluginData().save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             Location location = Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingLocation.toBukkitLocation();
@@ -266,6 +271,11 @@ public class SitListener extends Listener {
                     }
 
                     onSitStand(player);
+
+                    Location location = Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation.toBukkitLocation().clone();
+                    location.setYaw(player.getLocation().getYaw());
+                    location.setPitch(player.getLocation().getPitch());
+                    player.teleport(location, TeleportCause.PLUGIN);
 
                     Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).sittingFromLocation = null;
                     try {
