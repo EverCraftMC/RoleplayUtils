@@ -63,19 +63,22 @@ public class PlayerMoveListener extends Listener {
 
             if (bedDir == BlockFace.NORTH) {
                 yaw += 180;
+            } else if (bedDir == BlockFace.SOUTH) {
+                yaw += 0;
             } else if (bedDir == BlockFace.EAST) {
                 yaw += 90;
             } else if (bedDir == BlockFace.WEST) {
-                yaw -= 90;
+                yaw += -90;
             }
 
             if (yaw < -180) {
                 yaw += 360;
             }
-
             if (yaw > 180) {
                 yaw -= 360;
             }
+
+            // TODO Allow yaw to be wrapped around
 
             yaw = Math.max(yaw, -70);
             yaw = Math.min(yaw, 70);
@@ -134,17 +137,15 @@ public class PlayerMoveListener extends Listener {
                 MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setInvulnerable(false);
             }
 
-            if (event.getPlayer().isFlying()) {
-                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(false);
-            } else {
-                MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(true);
-            }
+            MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()).setGravity(!event.getPlayer().isFlying());
 
             if (MorphListener.morphEntities.get(event.getPlayer().getUniqueId().toString()) instanceof LivingEntity livingEntity) {
                 if (event.getNewGameMode().equals(GameMode.SPECTATOR)) {
                     livingEntity.setInvisible(true);
+                    livingEntity.setSilent(true);
                 } else {
                     livingEntity.setInvisible(false);
+                    livingEntity.setSilent(false);
                 }
             }
         }
