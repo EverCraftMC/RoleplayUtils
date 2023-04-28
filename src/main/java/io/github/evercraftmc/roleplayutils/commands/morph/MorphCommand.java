@@ -13,7 +13,10 @@ import io.github.evercraftmc.roleplayutils.listeners.MorphListener;
 import io.github.evercraftmc.roleplayutils.util.StringUtils;
 import io.github.evercraftmc.roleplayutils.util.formatting.ComponentFormatter;
 import io.github.evercraftmc.roleplayutils.util.formatting.TextFormatter;
+import io.github.kale_ko.bjsl.BJSL;
+import io.github.kale_ko.bjsl.elements.ParsedObject;
 
+@SuppressWarnings("deprecation")
 public class MorphCommand extends Command {
     public MorphCommand(String name, String description, List<String> aliases, String permission) {
         super(name, description, aliases, permission);
@@ -36,20 +39,30 @@ public class MorphCommand extends Command {
 
                     sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&aSuccessfully removed your morph")));
                 } else {
-                    try {
-                        EntityType entityType = EntityType.valueOf(args[0].replace("minecraft:", "").replace("-", "_").toUpperCase());
+                    EntityType entityType = EntityType.fromName(args[0].toLowerCase().replace("minecraft:", "").replace("-", "_"));
 
+                    if (entityType != null) {
                         Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).isMorphed = true;
                         Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorph = entityType;
 
                         if (args.length > 1) {
                             StringBuilder nbtBuilder = new StringBuilder();
-
                             for (Integer i = 1; i < args.length; i++) {
                                 nbtBuilder.append(args[i] + " ");
                             }
 
-                            Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = nbtBuilder.toString().trim();
+                            ParsedObject nbtObject = null;
+                            try {
+                                nbtObject = BJSL.parseJson(nbtBuilder.toString().trim()).asObject();
+                            } catch (Exception e) {
+                                nbtObject = null;
+                            }
+
+                            if (nbtObject != null) {
+                                Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = BJSL.stringifyJson(nbtObject);
+                            } else {
+                                sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cInvalid ntb")));
+                            }
                         } else {
                             Main.getInstance().getPluginData().get().players.get(player.getUniqueId().toString()).currentMorphNbt = null;
                         }
@@ -63,8 +76,8 @@ public class MorphCommand extends Command {
                         MorphListener.onMorphChange(player);
 
                         sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&aSuccessfully morphed into a" + ((entityType.toString().charAt(0) == 'A' || entityType.toString().charAt(0) == 'E' || entityType.toString().charAt(0) == 'I' || entityType.toString().charAt(0) == 'O' || entityType.toString().charAt(0) == 'U') ? "n" : "") + " " + entityType.toString().toLowerCase().replace("_", " "))));
-                    } catch (IllegalArgumentException e) {
-                        sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cInvalid arguments")));
+                    } else {
+                        sender.sendMessage(ComponentFormatter.stringToComponent(TextFormatter.translateColors("&cInvalid entity id")));
                     }
                 }
             } else {
@@ -88,11 +101,11 @@ public class MorphCommand extends Command {
             }
 
             for (EntityType entityType : EntityType.values()) {
-                list.add("minecraft:" + entityType.toString().toLowerCase());
+                list.add("minecraft:" + entityType.getName().toLowerCase());
             }
 
             list.remove("minecraft:player");
-            list.remove("minecraft:ender_dragon");
+            list.remove("minecraft:ender_dragon"); // FIXME Doesn't work because the dragon is multi-parted
         } else {
             return Arrays.asList();
         }
