@@ -46,17 +46,8 @@ public class MorphListener extends Listener {
 
             entity.setPersistent(true);
 
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
-                entity.setInvulnerable(true);
-            } else {
-                entity.setInvulnerable(false);
-            }
-
-            if (player.isFlying()) {
-                entity.setGravity(false);
-            } else {
-                entity.setGravity(true);
-            }
+            entity.setInvulnerable(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR);
+            entity.setGravity(!player.isFlying());
 
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.setAI(false);
@@ -65,6 +56,7 @@ public class MorphListener extends Listener {
 
                 if (player.getGameMode() == GameMode.SPECTATOR) {
                     livingEntity.setInvisible(true);
+                    livingEntity.setSilent(true);
                 }
 
                 player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
@@ -83,7 +75,7 @@ public class MorphListener extends Listener {
                     morphEntity.remove();
                 }
 
-                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
 
                 player.setInvisible(false);
                 player.setCollidable(true);
