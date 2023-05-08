@@ -13,7 +13,7 @@ version = project.plugin_version
 repositories {
     mavenCentral()
     maven { url "https://papermc.io/repo/repository/maven-public/" }
-	maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -78,7 +78,7 @@ tasks.register("upload") {
 
             if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
                 exec {
-                    commandLine "rsync", "-q", tasks.fatJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils.jar")
+                    commandLine "rsync", "-q", tasks.fatJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + server.split(":")[1] + ".jar")
                 }
             }
         }
