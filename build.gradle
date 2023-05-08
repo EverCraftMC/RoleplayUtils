@@ -76,14 +76,14 @@ tasks.register("upload") {
         servers.each() {
             def server = it
 
-            file(Paths.get(path + server.split(":")[0] + server.split(":")[2])).listFiles().each() {
-                if (it.getName().startsWith("RoleplayUtils-") && it.getName().endsWith(".jar")) {
-                    it.delete()
-                }
-            }
-
             if (server.split(":")[1].equalsIgnoreCase("Spigot")) {
-                Files.copy(tasks.fatJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + tasks.fatJar.outputs.files[0].getName().replace("roleplayutils-", "/RoleplayUtils-").replace("-fat", "")))
+                exec {
+                    commandLine System.getenv("EVERCRAFT_RM_CMD").replace("{name}", "RoleplayUtils").replace("{dir}", server.split(":")[0] + server.split(":")[2]).split(", ")
+                }
+
+                exec {
+                    commandLine "rsync", "-q", project(":" + server.split(":")[1]).tasks.fatJar.outputs.files[0].toPath(), Paths.get(path + server.split(":")[0] + server.split(":")[2] + "/RoleplayUtils-" + project(":" + server.split(":")[1]).tasks.fatJar.outputs.files[0].getName().replace("-fat", ""))
+                }
             }
         }
     }
