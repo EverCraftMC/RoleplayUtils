@@ -21,6 +21,10 @@ public class SerializableItemStack {
     private List<String> lore;
     private List<SerializableEnchantment> enchantments;
 
+    public SerializableItemStack() {
+        this(Material.STONE, null, 1, 0, null, null);
+    }
+
     public SerializableItemStack(Material type, String name, Integer amount, Integer damage, List<String> lore, List<SerializableEnchantment> enchantments) {
         this.type = type;
         this.name = name;
@@ -67,7 +71,7 @@ public class SerializableItemStack {
             damageable.setDamage(this.getDamage());
         }
 
-        if (this.getLore().size() > 0) {
+        if (this.getLore() != null && this.getLore().size() > 0) {
             List<Component> loreComponents = new ArrayList<Component>();
 
             for (String line : this.getLore()) {
@@ -77,9 +81,13 @@ public class SerializableItemStack {
             meta.lore(loreComponents);
         }
 
-        for (SerializableEnchantment enchantment : this.getEnchantments()) {
-            meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
+        if (this.getEnchantments() != null) {
+            for (SerializableEnchantment enchantment : this.getEnchantments()) {
+                meta.addEnchant(enchantment.getEnchantment(), enchantment.getLevel(), true);
+            }
         }
+
+        stack.setItemMeta(meta);
 
         return stack;
     }

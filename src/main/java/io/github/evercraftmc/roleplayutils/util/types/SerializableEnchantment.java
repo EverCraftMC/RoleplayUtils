@@ -5,7 +5,11 @@ import org.bukkit.enchantments.Enchantment;
 
 public class SerializableEnchantment {
     private String enchantment;
-    private Integer level = 1;
+    private Integer level;
+
+    public SerializableEnchantment() {
+        this(null, 1);
+    }
 
     public SerializableEnchantment(Enchantment enchantment, Integer level) {
         this.enchantment = enchantment.getKey().getKey().toUpperCase();

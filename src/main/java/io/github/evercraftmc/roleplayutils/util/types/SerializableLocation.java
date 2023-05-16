@@ -4,14 +4,18 @@ import org.bukkit.Location;
 import io.github.evercraftmc.roleplayutils.Main;
 
 public class SerializableLocation {
-    private String world = "world";
+    private String world;
 
-    private Double x = 0.0;
-    private Double y = 0.0;
-    private Double z = 0.0;
+    private Double x;
+    private Double y;
+    private Double z;
 
-    private Float yaw = 0f;
-    private Float pitch = 0f;
+    private Float yaw;
+    private Float pitch;
+
+    public SerializableLocation() {
+        this(null, 0.0, 0.0, 0.0, 0.0f, 0.0f);
+    }
 
     public SerializableLocation(String world, Double x, Double y, Double z, Float yaw, Float pitch) {
         this.world = world;
@@ -46,17 +50,6 @@ public class SerializableLocation {
 
     public Float getPitch() {
         return this.pitch;
-    }
-
-    @Override
-    public String toString() {
-        return this.getWorld() + "," + this.getX() + "," + this.getY() + "," + this.getZ() + "," + this.getYaw() + "," + this.getPitch();
-    }
-
-    public static SerializableLocation fromString(String string) {
-        String[] split = string.split(",");
-
-        return new SerializableLocation(split[0], Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]), Float.parseFloat(split[4]), Float.parseFloat(split[5]));
     }
 
     public Location toBukkitLocation() {
