@@ -13,7 +13,6 @@ import io.github.evercraftmc.roleplayutils.listeners.Listener;
 import io.github.evercraftmc.roleplayutils.listeners.MorphListener;
 import io.github.evercraftmc.roleplayutils.listeners.PlayerMoveListener;
 import io.github.evercraftmc.roleplayutils.listeners.SitListener;
-import io.github.kale_ko.ejcl.file.FileConfig;
 import io.github.kale_ko.ejcl.file.bjsl.JsonFileConfig;
 
 public class Main extends JavaPlugin {
@@ -109,7 +108,7 @@ public class Main extends JavaPlugin {
         return Main.Instance;
     }
 
-    public FileConfig<Data> getPluginData() {
+    public JsonFileConfig<Data> getPluginData() {
         return this.data;
     }
 }
