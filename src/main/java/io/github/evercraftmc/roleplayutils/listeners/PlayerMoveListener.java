@@ -2,7 +2,7 @@ package io.github.evercraftmc.roleplayutils.listeners;
 
 import org.bukkit.GameMode;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,8 +47,8 @@ public class PlayerMoveListener extends Listener {
             float yaw = player.getLocation().getYaw();
 
             BlockFace bedDir = BlockFace.WEST;
-            if (entityPlayer.getLevel().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getBlock() instanceof BedBlock bed) {
-                Direction direction = entityPlayer.getLevel().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getValue(BedBlock.FACING);
+            if (entityPlayer.level().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getBlock() instanceof BedBlock bed) {
+                Direction direction = entityPlayer.level().getChunk(entityPlayer.getSleepingPos().get()).getBlockState(entityPlayer.getSleepingPos().get()).getValue(BedBlock.FACING);
 
                 if (direction == Direction.NORTH) {
                     bedDir = BlockFace.NORTH;
